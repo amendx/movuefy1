@@ -19,16 +19,15 @@
                 </v-flex>
 
                 <div class="hero" v-if="this.currentMovie.backdrop_path">
-                  <v-flex xs12 md12></v-flex>
-                  <v-flex class="hidden-sm-only">
-                    <div class="details">
-                      <v-flex xs10 class="title1">
+                  <v-flex class="details">
+                    <v-layout row wrap class="hidden-sm-only">
+                      <v-flex xs12 md12 lg12 class="title1">
                         {{this.currentMovie.title}}
                         <span>PG-13</span>
                       </v-flex>
 
-                      <v-flex xs12 class="title2">{{this.currentMovie.tagline}}</v-flex>
-                      <v-flex xs7>
+                      <v-flex xs12 md12 class="title2">{{this.currentMovie.tagline}}</v-flex>
+                      <v-flex xs12 md12 lg6>
                         <fieldset class="rating">
                           <input type="radio" id="star5" name="rating" value="5">
                           <label class="full" for="star5" title="Awesome - 5 stars"></label>
@@ -51,11 +50,13 @@
                           <input type="radio" id="starhalf" name="rating" value="half">
                           <label class="half" for="starhalf" title="Sucks big time - 0.5 stars"></label>
                         </fieldset>
+                        <span class="likes">{{this.currentMovie.vote_count}} likes</span>
                       </v-flex>
-                      <v-flex xs5>
-                        <span class="likes">109 likes</span>
-                      </v-flex>
-                    </div>
+                      <!-- <v-flex xs9>
+                      
+                      </v-flex>-->
+                    </v-layout>
+                    <!-- </div> -->
                   </v-flex>
                 </div>
 
@@ -70,7 +71,39 @@
                   <!-- end column1 -->
 
                   <!-- <v-flex xs10 sm7 md10 offset-xs3 offset-md2> -->
-                  <v-flex xs12 md8 offset-md4>
+                  <v-layout class="hidden-sm-and-up" justify-center row wrap>
+                    <v-flex xs12 md12 lg12 class="title3">{{this.currentMovie.title}}</v-flex>
+
+                    <v-flex xs12 md12 class="title2">{{this.currentMovie.tagline}}</v-flex>
+                    <v-flex xs12 md12>
+                      <fieldset class="rating">
+                        <input type="radio" id="star5" name="rating" value="5">
+                        <label class="full" for="star5" title="Awesome - 5 stars"></label>
+                        <input type="radio" id="star4half" name="rating" value="4 and a half">
+                        <label class="half" for="star4half" title="Pretty good - 4.5 stars"></label>
+                        <input type="radio" id="star4" name="rating" value="4" checked>
+                        <label class="full" for="star4" title="Pretty good - 4 stars"></label>
+                        <input type="radio" id="star3half" name="rating" value="3 and a half">
+                        <label class="half" for="star3half" title="Meh - 3.5 stars"></label>
+                        <input type="radio" id="star3" name="rating" value="3">
+                        <label class="full" for="star3" title="Meh - 3 stars"></label>
+                        <input type="radio" id="star2half" name="rating" value="2 and a half">
+                        <label class="half" for="star2half" title="Kinda bad - 2.5 stars"></label>
+                        <input type="radio" id="star2" name="rating" value="2">
+                        <label class="full" for="star2" title="Kinda bad - 2 stars"></label>
+                        <input type="radio" id="star1half" name="rating" value="1 and a half">
+                        <label class="half" for="star1half" title="Meh - 1.5 stars"></label>
+                        <input type="radio" id="star1" name="rating" value="1">
+                        <label class="full" for="star1" title="Sucks big time - 1 star"></label>
+                        <input type="radio" id="starhalf" name="rating" value="half">
+                        <label class="half" for="starhalf" title="Sucks big time - 0.5 stars"></label>
+                      </fieldset>
+                    </v-flex>
+                    <v-flex xs12>
+                      <span class="likes">{{this.currentMovie.vote_count}} likes</span>
+                    </v-flex>
+                  </v-layout>
+                  <v-flex xs12 md8 offset-md3>
                     <v-card-text class="v-description">
                       <p>{{this.currentMovie.overview}}</p>
 
@@ -222,44 +255,52 @@ a:hover
  
 
 .details  
-  padding: 190px 0 0 280px;
+    padding: 190px 0 0 280px;
 
-  .title1  
-    color: white;
-    font-size: 44px;
-    margin-bottom: 13px;
-    position: relative;
+.title1  
+  color: white;
+  font-size: 44px;
+  margin-bottom: 13px;
+  position: relative;
 
-    span  
-      position: absolute;
-      top: 3px;
-      margin-left: 12px;
-      background: #c4af3d;
-      border-radius: 5px;
-      color: #544c21;
-      font-size: 14px;
-      padding: 0px 4px;
-     
+.title3
+  color: black;
+  font-size: 35px;
+  margin-bottom: 13px;
+  padding-top: 30px;
+  position: relative;
+
+  span  
+    position: absolute;
+    top: 3px;
+    margin-left: 12px;
+    background: #c4af3d;
+    border-radius: 5px;
+    color: #544c21;
+    font-size: 14px;
+    padding: 0px 4px;
+    
    
 
-  .title2  
-    color: #c7c1ba;
-    font-size: 23px;
-    font-weight: 300;
-    margin-bottom: 15px;
-   
+.title2  
+  color: #c7c1ba;
+  font-size: 23px;
+  font-weight: 300;
+  margin-bottom: 15px;
+  
 
-  .likes  
-    margin-left: 24px;
-   
+.likes  
+  margin-left: 24px;
+  padding: 10px 0;
+  font-size: 1.2em;
 
-  .likes:before  
-    content: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/icon_like.png");
-    position: relative;
-    top: 2px;
-    padding-right: 7px;
-   
- 
+.likes:before 
+  content: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/icon_like.png");
+  position: relative;
+  top: 2px;
+  padding-right: 7px;
+
+
 
 .description  
   bottom: 0px;
@@ -312,7 +353,6 @@ a:hover
    
  
 
-//star rating stuff via: https://codepen.io/jamesbarnett/pen/vlpkh/
 
 fieldset,
 label  
@@ -320,7 +360,6 @@ label
   padding: 0;
  
 
-/****** Style Star Rating Widget *****/
 
 .rating  
   border: none;
@@ -333,7 +372,7 @@ label
 .rating > label:before  
   margin: 5px;
   margin-top: 0;
-  font-size: 1em;
+  font-size: 1.2em;
   font-family: FontAwesome;
   display: inline-block;
   content: "\f005";
