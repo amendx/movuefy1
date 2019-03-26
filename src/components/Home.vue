@@ -2,39 +2,41 @@
   <v-container>
     <v-layout row wrap>
       <v-flex xs12 sm6 class="text-xs-center text-sm-right">
-        <v-btn large router to="/movies" class="primary">Explore Movies</v-btn>
+        <v-btn large router class="primary">Explore Movies</v-btn>
       </v-flex>
       <v-flex xs12 sm6 class="text-xs-center text-sm-left">
-        <v-btn large router to="/movies/favorites" class="primary">Organize Favorites</v-btn>
+        <v-btn large router  class="primary">Organize Favorites</v-btn>
       </v-flex>
     </v-layout>
     <v-layout row wrap class="mt-2">
       <v-flex xs12>
         <v-carousel>
-          <v-carousel-item v-for="meetup in meetups" :src="meetup.imageUrl" :key="meetup.id">
-            <div class="title">{{ meetup.title }}</div>
+          <v-carousel-item v-for="movie in popularMovies" :src="`https://image.tmdb.org/t/p/original/${movie.backdrop_path}`" :key="movie.id">
+            <div class="title">{{ movie.title }}</div>
           </v-carousel-item>
         </v-carousel>
       </v-flex>
     </v-layout>
     <v-layout row wrap class="mt-2">
       <v-flex xs12 class="text-xs-center">
-        <p>Join our awesome meetups!</p>
+        <p>Check out the latest movies!</p>
       </v-flex>
     </v-layout>
   </v-container>
 </template>
 
 <script>
-  export default {
-    data () {
+import axios from 'axios'
+import _ from 'lodash'
+export default {
+  data () {
       return {
-        meetups: [
-          { imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/4/47/New_york_times_square-terabass.jpg', id: 'afajfjadfaadfa323', title: 'Meetup in New York' },
-          { imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/7/7a/Paris_-_Blick_vom_gro%C3%9Fen_Triumphbogen.jpg', id: 'aadsfhbkhlk1241', title: 'Meetup in Paris' }
-        ]
+        popularMovies: []
       }
-    }
+    },
+  async created() {
+      return _.slice(this.popularMovies = (await axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=533bf9a3f2e9acf633932e225a72339e&sort_by=popularity.desc`)).data.results, 0, 6)
+        }
   }
 </script>
 
