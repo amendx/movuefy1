@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/components/Home'
 import Movies from '@/components/Movies/Movies'
+import Favorites from '@/components/Movies/Favorites'
+import MovieDetails from '@/components/Movies/MovieDetails'
 import Profile from '@/components/User/Profile'
 import Signup from '@/components/User/Signup'
 import Signin from '@/components/User/Signin'
@@ -19,6 +21,16 @@ export default new Router({
       path: '/movies',
       name: 'Movies',
       component: Movies
+    },
+    {
+      path: '/movies/:id',
+      name: 'MovieDetails',
+      component: MovieDetails
+    },
+    {
+      path: '/favorites',
+      name: 'Favorites',
+      component: Favorites
     },
     {
       path: '/profile',

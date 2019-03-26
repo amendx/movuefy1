@@ -11,7 +11,16 @@
     <v-layout row wrap class="mt-2">
       <v-flex xs12>
         <v-carousel>
-          <v-carousel-item v-for="movie in popularMovies" :src="`https://image.tmdb.org/t/p/original/${movie.backdrop_path}`" :key="movie.id">
+          <v-carousel-item v-for="movie in popularMovies" 
+           @click="onLoadMovie(movie.id)"
+          :src="`https://image.tmdb.org/t/p/original/${movie.backdrop_path}`" :key="movie.id">
+            
+             <v-progress-circular
+      indeterminate="loading"
+      :size="70"
+      :width="7"
+      color="purple"
+    ></v-progress-circular>
             <div class="title">{{ movie.title }}</div>
           </v-carousel-item>
         </v-carousel>
@@ -31,12 +40,18 @@ import _ from 'lodash'
 export default {
   data () {
       return {
-        popularMovies: []
+        popularMovies: [], 
+        loading: true
       }
     },
   async created() {
-      return _.slice(this.popularMovies = (await axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=533bf9a3f2e9acf633932e225a72339e&sort_by=popularity.desc`)).data.results, 0, 6)
-        }
+return this.popularMovies = (await axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=533bf9a3f2e9acf633932e225a72339e&sort_by=popularity.desc`)).data.results
+        },
+    methods: {
+      onLoadMovie (id) {
+        this.$router.push('/movies/' + id)
+      }
+    }
   }
 </script>
 

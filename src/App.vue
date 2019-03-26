@@ -47,7 +47,7 @@
         menuItems: [
            { icon: 'dashboard', title: 'Dashboard', link: '/home' },
            { icon: 'important_devices', title: 'View Movies', link: '/movies' },
-          { icon: 'room', title: 'Favorite Movies', link: '/movies/favorite' },
+          { icon: 'room', title: 'Favorite Movies', link: '/favorites' },
           { icon: 'person', title: 'Profile', link: '/profile' },
           { icon: 'face', title: 'Sign up', link: '/signup' },
           { icon: 'lock_open', title: 'Sign in', link: '/signin' }
