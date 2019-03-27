@@ -11,7 +11,7 @@
     <v-layout row wrap class="mt-2">
       <v-flex xs12>
         <v-carousel>
-          <v-carousel-item v-for="movie in popularMovies" 
+          <v-carousel-item v-for="movie in movies" 
            @click="onLoadMovie(movie.id)"
           :src="`https://image.tmdb.org/t/p/original/${movie.backdrop_path}`" :key="movie.id">
             
@@ -57,6 +57,11 @@ export default {
 
       onLoadMovie (id) {
         this.$router.push('/movies/' + id)
+      }
+    },
+    computed: {
+      movies() {
+        return this.$store.getters.featuredMovies
       }
     }
   }
