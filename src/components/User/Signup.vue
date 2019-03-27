@@ -78,17 +78,19 @@
       },
       user () {
         return this.$store.getters.user
-      },
-    
+      }
     },
-   
+    watch: {
+      user (value) {
+        if (value !== null && value !== undefined) {
+          this.$router.push('/')
+        }
+      }
+    },
     methods: {
       onSignup () {
         this.$store.dispatch('signUserUp', {email: this.email, password: this.password})
-      },
-      onDismissed () {
-         this.$store.dispatch('clearError')
-       }
+      }
     }
   }
 </script>
