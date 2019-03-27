@@ -9,7 +9,7 @@ import SaveFavorite from "@/components/Movies/SaveFavorite";
 import Profile from "@/components/User/Profile";
 import Signup from "@/components/User/Signup";
 import Signin from "@/components/User/Signin";
-
+import AuthGuard from "./auth-guard";
 Vue.use(Router);
 
 export default new Router({
@@ -32,23 +32,27 @@ export default new Router({
     {
       path: "/favorites",
       name: "Favorites",
-      component: Favorites
+      component: Favorites,
+      beforeEnter: AuthGuard
     },
     {
       path: "/favorites/:id",
       name: "MovieCard",
       props: true,
-      component: MovieCard
+      component: MovieCard,
+      beforeEnter: AuthGuard
     },
     {
       path: "/profile",
       name: "Profile",
-      component: Profile
+      component: Profile,
+      beforeEnter: AuthGuard
     },
     {
       path: "/saveFavorite",
       name: "SaveFavorite",
-      component: SaveFavorite
+      component: SaveFavorite,
+      beforeEnter: AuthGuard
     },
     {
       path: "/signin",

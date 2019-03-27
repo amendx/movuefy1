@@ -33,5 +33,12 @@ new Vue({
       projectId: "movues-2bdc6",
       storageBucket: "movues-2bdc6.appspot.com"
     });
+
+    //Firebase detects if there's any change to localStorage token
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        this.$store.dispatch("autoSignIn", user);
+      }
+    });
   }
 });

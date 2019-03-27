@@ -1,7 +1,14 @@
 
 <template>
   <v-container>
-    <v-layout row wrap v-for="movie in movies" :key="movie.movieId" class="mb-2">
+    <v-layout
+      row
+      wrap
+      v-for="movie in movies"
+      :key="movie.movieId"
+      v-if="userIsCreator"
+      class="mb-2"
+    >
       <v-flex xs12 sm10 md8 offset-sm1 offset-md2>
         <v-card class="info">
           <v-container fluid>
@@ -27,6 +34,23 @@
         </v-card>
       </v-flex>
     </v-layout>
+    <v-layout v-if="!userIsCreator">
+      <v-flex xs12 md8 sm8 lg8 offset-sm2 offset-md2>
+        <v-card>
+          <v-card-title primary-title>
+            <h3 class="headline mb-0">No favorite movies</h3>
+            <v-divider light></v-divider>
+          </v-card-title>
+          <v-card-text>How about explore some movies?</v-card-text>
+          <v-divider></v-divider>
+          <v-card-actions>
+            <v-flex class="text-xs-right">
+              <v-btn flat color="purple">Explore</v-btn>
+            </v-flex>
+          </v-card-actions>
+        </v-card>
+      </v-flex>
+    </v-layout>
   </v-container>
 </template>
 
@@ -41,6 +65,18 @@ export default {
   computed: {
     movies() {
       return this.$store.getters.loadedFavorites;
+    },
+    userIsAuthenticated() {
+      return (
+        this.$store.getters.user != null &&
+        this.$store.getters.user !== undefined
+      );
+    },
+    userIsCreator() {
+      if (!this.userIsAuthenticated) {
+        return false;
+      }
+      return this.$store.getters.user.id === this.movies.creatorId;
     }
   },
   created() {
@@ -48,3 +84,10 @@ export default {
   }
 };
 </script>
+<style scoped>
+.color-header {
+  color: red;
+}
+</style>
+
+

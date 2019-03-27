@@ -81,7 +81,8 @@ export const store = new Vuex.Store({
               id: key,
               title: obj[key].title,
               description: obj[key].description,
-              movieId: obj[key].movieId
+              movieId: obj[key].movieId,
+              creatorId: obj[key].creatorId
             });
           }
           commit("setLoadedFavorites", favorites);
@@ -93,11 +94,12 @@ export const store = new Vuex.Store({
         });
     },
 
-    saveFavorite({ commit }, payload) {
+    saveFavorite({ commit, getters }, payload) {
       const favorite = {
         title: payload.title,
         movieId: payload.movieId,
-        description: payload.description
+        description: payload.description,
+        creatorId: getters.user.id
       };
       firebase
         .database()
@@ -156,6 +158,10 @@ export const store = new Vuex.Store({
     },
     autoSignIn({ commit }, payload) {
       commit("setUser", { id: payload.uid, favoritedMovies: [] });
+    },
+    logout({ commit }) {
+      firebase.auth().signOut();
+      commit("setUser", null);
     },
     clearError({ commit }) {
       commit("clearError");
