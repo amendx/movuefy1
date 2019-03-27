@@ -46,22 +46,17 @@ export default {
         loading: true
       }
     },
-  async created() {
-    this.fetch()
+  computed: {
+    movies(){
+       return this.$store.state.fetchedMovies
+     }
   },
-    methods: {
-        async fetch (){
-        const {data} = await MoviesRepository.getPopularMovies()
-        this.popularMovies = data.results;
-        },
-
+  created(){
+    this.$store.dispatch('fetchMovies')
+    },
+  methods: {
       onLoadMovie (id) {
         this.$router.push('/movies/' + id)
-      }
-    },
-    computed: {
-      movies() {
-        return this.$store.getters.featuredMovies
       }
     }
   }

@@ -9,39 +9,12 @@ Vue.use(Vuex)
 
 export const store = new Vuex.Store({
     state: {
-        //loadedMeetups
-        userFavorites: [
-            {
-                title: "titanic", vote_count: 3232
-            },
-            {
-                title: "zorarc", vote_count: 200
-            },
-            {
-                title: "amanda", vote_count: 3200
-            }
-            
-        ],
-        loadedMovies: [
-            {
-                title: "titanic", vote_count: 3232, id: 1, release_date: '1995-05-09'
-            },
-            {
-                title: "zorarc", vote_count: 200, id: 2,release_date: '2019-10-27'
-            },
-            {
-                title: "amanda", vote_count: 3200,id: 3, release_date: '2002-11-04'
-            }
-        ],
         fetchedMovies: [],
-        user: {
-            id:'34234',
-            favoritedMovies: ['sidjasi']
-        }
+        user: {}
     },
     mutations: {
-        FETCH_MOVIES(state, fetchedMovies){
-            state.fetchedMovies = fetchedMovies
+        fetchMovies(state, payload){
+            state.fetchedMovies = payload
         },
         setUser(state, payload){
             state.user = payload
@@ -49,8 +22,8 @@ export const store = new Vuex.Store({
     },
     actions: {
        async fetchMovies({commit}){
-           const data = await MoviesRepository.getPopularMovies().data;
-            commit('FETCH_MOVIES', data)
+           const {data} = await MoviesRepository.getPopularMovies();
+            commit('fetchMovies', data.results)
             },
             signUserUp({commit}, payload){
                     firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password).then((user) =>{
@@ -68,13 +41,13 @@ export const store = new Vuex.Store({
     }, 
     getters:{
         loadedMovies(state){
-            return state.loadedMovies.sort((movA, movB) =>{
+            return state.fetchedMovies.sort((movA, movB) =>{
                 return movA.release_date > movB.release_date
             })
         }, 
         loadedMovie(state){
             return (movieId) => {
-                return state.loadedMovies.find((movie)=>{
+                return state.fetchedMovies.find((movie)=>{
                     return movie.id === movieId
                 })
             }
@@ -91,8 +64,8 @@ export const store = new Vuex.Store({
                 })
             }
         },
-        featuredMovies(state, getters){
-            return getters.movies.slice(0,5);
+        fetchedMovies(state, getters){
+            return getters.fetchedMovies.slice(0,5);
         }
     }
 })
