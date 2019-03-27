@@ -12,7 +12,7 @@
                     <img
                       v-if="this.currentMovie.poster_path"
                       alt="cover"
-                      src="https://m.media-amazon.com/images/M/MV5BMTE0YWFmOTMtYTU2ZS00ZTIxLWE3OTEtYTNiYzBkZjViZThiXkEyXkFqcGdeQXVyODMzMzQ4OTI@._V1_.jpg"
+                      :src="`https://image.tmdb.org/t/p/original${this.currentMovie.poster_path}`"
                       class="cover"
                     >
                   </a>
@@ -50,7 +50,9 @@
                           <input type="radio" id="starhalf" name="rating" value="half">
                           <label class="half" for="starhalf" title="Sucks big time - 0.5 stars"></label>
                         </fieldset>
-                        <span class="likes">{{this.currentMovie.vote_count}} likes</span>
+                        <span class="likes">
+                          <div> {{voteCounted}} </div>
+                           likes</span>
                       </v-flex>
                       <!-- <v-flex xs9>
                       
@@ -149,48 +151,41 @@
 </template>
 
 <script>
-import axios from "axios";
+import { RepositoryAbstractFactory} from '../../services/RepositoryAbstractFactory'
+
+const MoviesRepository = RepositoryAbstractFactory.get('movies')
 export default {
   data() {
     return {
-      currentMovie: {}
+      currentMovie: {},
     };
   },
-  methods: {
-    getMovie() {
-      return axios
-        .get(
-          `https://api.themoviedb.org/3/movie/${
-            this.$route.params.id
-          }?api_key=533bf9a3f2e9acf633932e225a72339e&language=en-US`
-        )
-        .then(
-          res => {
-            console.log(res);
-            this.currentMovie = res.data;
-          },
-          err => {
-            console.log("error ent");
-          }
-        );
-    }
+   async created() {
+    this.fetch()
   },
-  created() {
-    this.getMovie();
+  computed: {
+      voteCounted : function() {
+        return this.currentMovie.vote_count
+      }
   },
+    methods: {
+        async fetch (){
+        const {data} = await MoviesRepository.getMovie(this.$route.params.id)
+        this.currentMovie = data;
+        },
+        // async getPosterPath(path){
+        //  const {data}  = await MoviesRepository.getImagePath(path)
+         
+        // }
+
+  },
+ 
   watch: {
     $route(to, from) {
-      return (this.currentMovie = axios.get(
-        `https://api.themoviedb.org/3/movie/${
-          this.$route.params.id
-        }?api_key=533bf9a3f2e9acf633932e225a72339e&language=en-US`
-      ).data);
-    },
-    currentMovie: function() {
-      this.currentMovie = getMovie();
-    }
+
   }
-};
+  }
+}
 </script>
 
 

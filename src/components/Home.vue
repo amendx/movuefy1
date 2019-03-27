@@ -16,7 +16,6 @@
           :src="`https://image.tmdb.org/t/p/original/${movie.backdrop_path}`" :key="movie.id">
             
              <v-progress-circular
-      indeterminate="loading"
       :size="70"
       :width="7"
       color="purple"
@@ -37,6 +36,9 @@
 <script>
 import axios from 'axios'
 import _ from 'lodash'
+import { RepositoryAbstractFactory} from './../services/RepositoryAbstractFactory'
+
+const MoviesRepository = RepositoryAbstractFactory.get('movies')
 export default {
   data () {
       return {
@@ -45,9 +47,14 @@ export default {
       }
     },
   async created() {
-return this.popularMovies = (await axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=533bf9a3f2e9acf633932e225a72339e&sort_by=popularity.desc`)).data.results
-        },
+    this.fetch()
+  },
     methods: {
+        async fetch (){
+        const {data} = await MoviesRepository.getPopularMovies()
+        this.popularMovies = data.results;
+        },
+
       onLoadMovie (id) {
         this.$router.push('/movies/' + id)
       }
