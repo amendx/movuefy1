@@ -1,8 +1,9 @@
 <template>
   <v-container>
-   
-    <v-layout row >
-      
+    <v-layout row v-if="error">
+      <v-flex xs12 sm6 offset-sm3>
+        <app-alert @dissmissed="onDissmissed" :text="error.message"></app-alert>
+      </v-flex>
     </v-layout>
     <v-layout row>
       <v-flex xs12 sm6 offset-sm3>
@@ -18,7 +19,8 @@
                       id="email"
                       v-model="email"
                       type="email"
-                      required></v-text-field>
+                      required
+                    ></v-text-field>
                   </v-flex>
                 </v-layout>
                 <v-layout row>
@@ -29,7 +31,8 @@
                       id="password"
                       v-model="password"
                       type="password"
-                      required></v-text-field>
+                      required
+                    ></v-text-field>
                   </v-flex>
                 </v-layout>
                 <v-layout row>
@@ -40,17 +43,17 @@
                       id="confirmPassword"
                       v-model="confirmPassword"
                       type="password"
-                      :rules="[comparePasswords]"></v-text-field>
+                      :rules="[comparePasswords]"
+                    ></v-text-field>
                   </v-flex>
                 </v-layout>
                 <v-layout row>
                   <v-flex xs12>
-                      <!-- :disabled="loading" :loading="loading" -->
-                    <v-btn type="submit" >
+                    <v-btn type="submit" :disabled="loading" :loading="loading">
                       Sign up
-                       <span slot="loader" class="custom-loader">
+                      <span slot="loader" class="custom-loader">
                         <v-icon light>cached</v-icon>
-                       </span>
+                      </span>
                     </v-btn>
                   </v-flex>
                 </v-layout>
@@ -64,33 +67,47 @@
 </template>
 
 <script>
-  export default {
-    data () {
-      return {
-        email: '',
-        password: '',
-        confirmPassword: ''
-      }
+export default {
+  data() {
+    return {
+      email: "",
+      password: "",
+      confirmPassword: ""
+    };
+  },
+  computed: {
+    comparePasswords() {
+      return this.password !== this.confirmPassword
+        ? "Passwords do not match"
+        : "";
     },
-    computed: {
-      comparePasswords () {
-        return this.password !== this.confirmPassword ? 'Passwords do not match' : ''
-      },
-      user () {
-        return this.$store.getters.user
-      }
+    user() {
+      return this.$store.getters.user;
     },
-    watch: {
-      user (value) {
-        if (value !== null && value !== undefined) {
-          this.$router.push('/')
-        }
-      }
+    error() {
+      return this.$store.getters.error;
     },
-    methods: {
-      onSignup () {
-        this.$store.dispatch('signUserUp', {email: this.email, password: this.password})
+    loading() {
+      return this.$store.getters.loading;
+    }
+  },
+  watch: {
+    user(value) {
+      if (value !== null && value !== undefined) {
+        this.$router.push("/home");
       }
     }
+  },
+  methods: {
+    onSignup() {
+      this.$store.dispatch("signUserUp", {
+        email: this.email,
+        password: this.password
+      });
+    },
+    onDissmissed() {
+      this.$store.dispatch("clearError");
+    }
   }
+};
 </script>

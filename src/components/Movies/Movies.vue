@@ -1,46 +1,30 @@
 
 <template>
   <v-container>
-     <v-layout>
-    <v-flex xs12 sm6 offset-sm3>
-      <v-card>
-        <v-img
-          class="white--text"
-          height="200px"
-          src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
-        >
-          <v-container fill-height fluid>
-            <v-layout fill-height>
-              <v-flex xs12 align-end flexbox>
-                <span class="headline">Top 10 Australian beaches</span>
-              </v-flex>
-            </v-layout>
-          </v-container>
-        </v-img>
-        <v-card-title>
-          <div>
-            <span class="grey--text">Number 10</span><br>
-            <span>Whitehaven Beach</span><br>
-            <span>Whitsunday Island, Whitsunday Islands</span>
-          </div>
-        </v-card-title>
-        <v-card-actions>
-          <v-btn flat color="orange">Share</v-btn>
-          <v-btn flat color="orange">Explore</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-flex>
-  </v-layout>
+    <vue-instant
+      name="customName"
+      type="google"
+      placeholder="Search Movie..."
+      :show-autocomplete="true"
+      :autofocus="false"
+      :suggestions="suggestions"
+      :suggestion-attribute="suggestionAttribute"
+      v-model="searchterm"
+      @selected="selected"
+      @input="changed"
+      @enter="search"
+    ></vue-instant>
+    <template v-if="result"></template>
     <v-layout row wrap v-for="movie in movies" :key="movie.id" class="mb-2">
-      <v-flex xs12 sm10 md8 offset-sm1 offset-md2>
-        <v-card class="info">
+      <v-flex xs12 sm10 md8 lg6 offset-sm1 offset-md2 offset-lg3>
+        <v-card class="card">
           <v-container fluid>
             <v-layout row justify-start>
               <v-flex xs12 sm6 md9>
-                <v-card-media 
-                class="card-image"
-                   :src="`https://image.tmdb.org/t/p/w500/${movie.poster_path}`"
-                   height="70vh"
+                <v-card-media
+                  class="card-image"
+                  :src="`https://image.tmdb.org/t/p/w500/${movie.poster_path}`"
+                  height="70vh"
                 ></v-card-media>
               </v-flex>
               <v-flex xs12 sm6 md9>
@@ -52,8 +36,7 @@
                 </v-card-title>
                 <v-card-actions>
                   <v-btn flat :to="'/movies/' + movie.id">
-                    <v-icon left light>arrow_forward</v-icon>
-                    View Movie
+                    <v-icon left light>arrow_forward</v-icon>View Movie
                   </v-btn>
                 </v-card-actions>
               </v-flex>
@@ -62,32 +45,86 @@
         </v-card>
       </v-flex>
     </v-layout>
+    <v-pagination @input="next" :value="page" :length="7" :total-visible="7"></v-pagination>
   </v-container>
 </template>
 
 
 <script>
+import axios from "axios";
 export default {
-  data(){
-    return{
-      name: 'Movies',
-    }
+  data() {
+    return {
+      name: "Movies",
+      searchterm: "",
+      suggestionAttribute: "original_title",
+      suggestions: [],
+      selectedEvent: "",
+      result: null
+    };
   },
   computed: {
-    movies(){
-       return this.$store.state.fetchedMovies
-     }
-  },
-  created(){
-    this.$store.dispatch('fetchMovies')
+    movies() {
+      return this.$store.state.fetchedMovies;
+    },
+    page() {
+      return this.$store.state.currentPage;
     }
-}
+  },
+  watch: {
+    page() {
+      console.log(page);
+    },
+    searchterm: function(searchterm) {
+      this.suggest(searchterm);
+    }
+  },
+  methods: {
+    next() {
+      // this.$store.dispatch("fetchMoviePage", this.$store.state.currentPage);
+    },
+    submit: function() {
+      this.search(this.searchterm);
+    },
+    suggest: function(searchterm) {
+      var that = this;
+      this.suggestions = [];
+      this.$store
+        .dispatch("setSearchMovies", this.searchterm)
+        .then(response => {
+          response.forEach(function(a) {
+            that.suggestions.push(a);
+            console.log(a);
+          });
+        });
+    },
+    selected: function(current) {
+      this.selection = current;
+    },
+    changed: function() {
+      console.log("changed");
+    },
+    search: function() {}
+  },
+  created() {
+    // this.$store.dispatch("fetchMovies");
+    this.$store.dispatch("fetchMoviePage", 1);
+  }
+};
 </script>
 
-<style>
+<style lang="sass" scoped>
 
-.card-image{
-transform: scale(0.7, 0.7);
-}
+.card-image 
+  transform: scale(0.7, 0.7);
+
+
+.card 
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  -webkit-transition:  box-shadow .3s ease-out;
+  &:hover
+    box-shadow: 1px 8px 20px grey;
+    -webkit-transition: box-shadow .3s ease-in;
+  
 </style>
 

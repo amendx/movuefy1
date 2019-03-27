@@ -5,21 +5,29 @@
         <v-btn large router class="primary">Explore Movies</v-btn>
       </v-flex>
       <v-flex xs12 sm6 class="text-xs-center text-sm-left">
-        <v-btn large router  class="primary">Organize Favorites</v-btn>
+        <v-btn large router to="/savefavorite" class="primary">Organize Favorites</v-btn>
       </v-flex>
     </v-layout>
-    <v-layout row wrap class="mt-2">
+    <v-layout>
+      <v-flex xs12 class="text-xs-center">
+        <v-progress-circular
+          indeterminate
+          class="primary--text"
+          :width="7"
+          :size="70"
+          v-if="loading"
+        ></v-progress-circular>
+      </v-flex>
+    </v-layout>
+    <v-layout row wrap class="mt-2" v-if="!loading">
       <v-flex xs12>
         <v-carousel>
-          <v-carousel-item v-for="movie in movies" 
-           @click="onLoadMovie(movie.id)"
-          :src="`https://image.tmdb.org/t/p/original/${movie.backdrop_path}`" :key="movie.id">
-            
-             <v-progress-circular
-      :size="70"
-      :width="7"
-      color="purple"
-    ></v-progress-circular>
+          <v-carousel-item
+            v-for="movie in movies"
+            @click="onLoadMovie(movie.id)"
+            :src="`https://image.tmdb.org/t/p/original/${movie.backdrop_path}`"
+            :key="movie.id"
+          >
             <div class="title">{{ movie.title }}</div>
           </v-carousel-item>
         </v-carousel>
@@ -34,41 +42,33 @@
 </template>
 
 <script>
-import axios from 'axios'
-import _ from 'lodash'
-import { RepositoryAbstractFactory} from './../services/RepositoryAbstractFactory'
-
-const MoviesRepository = RepositoryAbstractFactory.get('movies')
 export default {
-  data () {
-      return {
-        popularMovies: [], 
-        loading: true
-      }
-    },
   computed: {
-    movies(){
-       return this.$store.state.fetchedMovies
-     }
-  },
-  created(){
-    this.$store.dispatch('fetchMovies')
+    movies() {
+      return this.$store.state.fetchedMovies;
     },
+    loading() {
+      return this.$store.getters.loading;
+    }
+  },
+  created() {
+    this.$store.dispatch("fetchMovies");
+  },
   methods: {
-      onLoadMovie (id) {
-        this.$router.push('/movies/' + id)
-      }
+    onLoadMovie(id) {
+      this.$router.push("/movies/" + id);
     }
   }
+};
 </script>
 
 <style scoped>
-  .title {
-    position: absolute;
-    bottom: 50px;
-    background-color: rgba(0,0,0,0.5);
-    color: white;
-    font-size: 2em;
-    padding: 20px;
-  }
+.title {
+  position: absolute;
+  bottom: 50px;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  font-size: 2em;
+  padding: 20px;
+}
 </style>
