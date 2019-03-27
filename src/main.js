@@ -22,16 +22,11 @@ new Vue({
   render: h => h(App),
   created() {
     firebase.initializeApp({
-      // apiKey: `${process.env.VUE_APP_FIREBASE_API_KEY}`,
-      // authDomain: `${process.env.VUE_APP_FIREBASE_AUTH_DOMAIN}`,
-      // databaseURL: `${process.env.VUE_APP_FIREBASE_DB_URL}`,
-      // projectId: `${process.env.VUE_APP_FIREBASE_PROJECT_ID}`,
-      // storageBucket: `${process.env.VUE_APP_FIREBASE_STORAGE_BUCKET}`
-      apiKey: "AIzaSyB3weT8-fIiJGrOda26HiLI_2LxgapT4aE",
-      authDomain: "movues-2bdc6.firebaseapp.com",
-      databaseURL: "https://movues-2bdc6.firebaseio.com",
-      projectId: "movues-2bdc6",
-      storageBucket: "movues-2bdc6.appspot.com"
+      apiKey: `${process.env.VUE_APP_FIREBASE_API_KEY}`,
+      authDomain: `${process.env.VUE_APP_FIREBASE_AUTH_DOMAIN}`,
+      databaseURL: `${process.env.VUE_APP_FIREBASE_DB_URL}`,
+      projectId: `${process.env.VUE_APP_FIREBASE_PROJECT_ID}`,
+      storageBucket: `${process.env.VUE_APP_FIREBASE_STORAGE_BUCKET}`
     });
 
     //Firebase detects if there's any change to localStorage token
