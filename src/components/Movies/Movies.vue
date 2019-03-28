@@ -82,7 +82,7 @@ export default {
   },
   computed: {
     movies() {
-      return this.$store.state.fetchedMovies;
+      return this.$store.getters.loadedMovies;
     },
     page() {
       return this.$store.state.currentPage;
@@ -119,8 +119,8 @@ export default {
     search: function() {}
   },
   created() {
-    // this.$store.dispatch("fetchMovies");
-    this.$store.dispatch("fetchMoviePage", 1);
+     this.$store.dispatch("loadedMovies");
+    // this.$store.dispatch("fetchMoviePage", 1);
   }
 };
 </script>
