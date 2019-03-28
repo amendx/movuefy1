@@ -45,14 +45,14 @@
 export default {
   computed: {
     movies() {
-      return this.$store.state.fetchedMovies;
+      return this.$store.getters.loadedMovies;
     },
     loading() {
       return this.$store.getters.loading;
     }
   },
   created() {
-    this.$store.dispatch("fetchMovies");
+    this.$store.dispatch("loadedMovies");
   },
   methods: {
     onLoadMovie(id) {
