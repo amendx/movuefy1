@@ -1,24 +1,64 @@
 <template>
-  <div id="app">
-  <div class="card-row">
-    <div class="card">
-      
-      <img class="card-image" src="https://placeimg.com/640/480/nature">
-      
-      <div class="card-footer">
-        <p class="card-text">RECIPE</p>
-        <h3 class="card-title">Title</h3>
-        <p class="card-text">by 
-          <span class="card-author">Author</span>
-        </p>
-      </div>
-    </div>
-  </div>
+<div>
+
+
+ <v-container>
+    
+    <v-layout row wrap >
+      <v-flex xs12>
+        <v-card>
+          <v-card-title>
+            <h6 class="primary--text">{{ currentMovie.title }}</h6>
+           
+          </v-card-title>
+          <v-card-media
+             :src="`https://image.tmdb.org/t/p/original${this.currentMovie.backdrop_path}`"
+            height="400px"
+          ></v-card-media>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <app-movie-favorite-dialog
+              :movieId="currentMovie.id"
+              v-if="userIsAuthenticated"></app-movie-favorite-dialog>
+          </v-card-actions>
+        </v-card>
+      </v-flex>
+    </v-layout>
+  </v-container>
 </div>
 </template>
 
 <script>
+import { RepositoryAbstractFactory } from "../../services/RepositoryAbstractFactory";
+
+const MoviesRepository = RepositoryAbstractFactory.get("movies");
 export default {
+  props: ['id'],
+  data(){
+    return{
+      currentMovie: {}
+    }
+  }, 
+   async created() {
+    this.fetch();
+  },
+  methods:{
+    async fetch() {
+      const { data } = await MoviesRepository.getMovie(this.$route.params.id);
+      this.currentMovie = data;
+    },
+    async getPosterPath(path) {
+      const { data } = await MoviesRepository.getImagePath(path);
+    }
+  },
+  computed:{
+     userIsAuthenticated() {
+      return (
+        this.$store.getters.user != null &&
+        this.$store.getters.user !== undefined
+      );
+    } 
+  }
 
 }
 </script>

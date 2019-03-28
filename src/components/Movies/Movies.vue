@@ -10,7 +10,6 @@
             type="google"
             placeholder="Search Movie..."
             :show-autocomplete="true"
-            :autofocus="false"
             :suggestions="suggestions"
             :suggestion-attribute="suggestionAttribute"
             v-model="searchterm"
@@ -90,9 +89,7 @@ export default {
     }
   },
   watch: {
-    page() {
-      console.log(page);
-    },
+  
     searchterm: function(searchterm) {
       this.suggest(searchterm);
     }
@@ -112,7 +109,6 @@ export default {
         .then(response => {
           response.forEach(function(a) {
             that.suggestions.push(a);
-            console.log(a);
           });
         });
     },

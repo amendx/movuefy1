@@ -6,7 +6,7 @@
       wrap
       v-for="movie in movies"
       :key="movie.movieId"
-      v-if="userIsCreator"
+      
       class="mb-2"
     >
       <v-flex xs12 sm10 md8 offset-sm1 offset-md2>
@@ -24,7 +24,7 @@
                   </div>
                 </v-card-title>
                 <v-card-actions>
-                  <v-btn flat :to="'/favorites/' + movie.id">
+                  <v-btn flat :to="'/favorites/' + movie.movieId">
                     <v-icon left light>arrow_forward</v-icon>View Movie
                   </v-btn>
                 </v-card-actions>
@@ -34,7 +34,7 @@
         </v-card>
       </v-flex>
     </v-layout>
-    <v-layout v-if="!userIsCreator">
+    <v-layout >
       <v-flex xs12 md8 sm8 lg8 offset-sm2 offset-md2>
         <v-card>
           <v-card-title primary-title>
@@ -59,12 +59,13 @@
 export default {
   data() {
     return {
-      name: "Favorites"
+      name: "Favorites",
+      props: ['id']
     };
   },
   computed: {
     movies() {
-      return this.$store.getters.loadedFavorites;
+      return this.$store.getters.registeredFavorites;
     },
     userIsAuthenticated() {
       return (
@@ -76,6 +77,7 @@ export default {
       if (!this.userIsAuthenticated) {
         return false;
       }
+
       return this.$store.getters.user.id === this.movies.creatorId;
     }
   },

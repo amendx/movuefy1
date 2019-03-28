@@ -4,14 +4,16 @@ import App from "./App";
 import { store } from "./store";
 import router from "./router";
 import * as firebase from "firebase";
-import "@firebase/firestore";
 import "vue-instant/dist/vue-instant.css";
 import VueInstant from "vue-instant";
 import AlertComp from "./components/Shared/Alert.vue";
+import FavoriteDialog from './components/Movies/Favorite/FavoriteDialog.vue'
 
 Vue.use(VueInstant);
 Vue.use(Vuetify);
 Vue.component("app-alert", AlertComp);
+Vue.component("app-movie-favorite-dialog", FavoriteDialog)
+
 Vue.config.productionTip = false;
 
 /* eslint-disable no-new */
@@ -33,6 +35,7 @@ new Vue({
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         this.$store.dispatch("autoSignIn", user);
+        this.$store.dispatch("fetchUserData");
       }
     });
   }

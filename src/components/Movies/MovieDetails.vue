@@ -1,4 +1,5 @@
 <template>
+<div>
   <v-container>
     <v-layout row wrap>
       <v-flex xs12>
@@ -141,13 +142,26 @@
               <!-- </v-container> -->
               <!-- end container -->
             </div>
+
           </v-card-text>
+          
         </v-card>
       </v-flex>
     </v-layout>
 
     <!-- end movie-card -->
   </v-container>
+<v-container>
+<v-card>
+  <v-card-text> resiterrrrr </v-card-text>
+  <v-card-actions>
+            <v-spacer></v-spacer>
+            <app-movie-favorite-dialog
+              :meetupId="movieId"></app-movie-favorite-dialog>
+          </v-card-actions>
+</v-card>
+</v-container>
+</div>
 </template>
 
 <script>
@@ -166,6 +180,9 @@ export default {
   computed: {
     voteCounted: function() {
       return this.currentMovie.vote_count;
+    },
+    movieId: function() {
+      return this.$route.params.id
     }
   },
   methods: {

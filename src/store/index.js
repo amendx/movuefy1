@@ -11,13 +11,27 @@ export const store = new Vuex.Store({
     fetchedMovies: [],
     user: null,
     currentPage: 1,
-    loadedFavorites: [],
+    registeredFavorites: [],
+    loadedMovie: {},
     loading: false,
     error: null,
     searchMovies: [],
     currentMovie: null
   },
   mutations: {
+    registerUserForMovie(state, payload) {
+      const id = payload.id
+      if (state.user.registeredFavorites.findIndex(movie => movie.id === id) >= 0) {
+        return
+      }
+      state.user.registeredFavorites.push(id)
+      state.user.fbKeys[id] = payload.fbKey
+    },
+    unregisterUserFromMovie (state, payload) {
+      const registeredFavorites = state.user.registeredFavorites
+      registeredFavorites.splice(registeredFavorites.findIndex(movie => movie.id === payload), 1)
+      Reflect.deleteProperty(state.user.fbKeys, payload)
+    },
     fetchMovies(state, payload) {
       state.fetchedMovies = payload;
     },
@@ -43,11 +57,42 @@ export const store = new Vuex.Store({
     setCurrentMovie(state, payload) {
       state.currentMovie = payload;
     },
-    setLoadedFavorites(state, payload) {
-      state.loadedFavorites = payload;
+    setRegisteredFavorites(state, payload) {
+      state.registeredFavorites = payload;
     }
   },
   actions: {
+    registerUserForMovie ({commit, getters}, payload) {
+      commit('setLoading', true)
+      const user = getters.user
+      firebase.database().ref('/users/' + user.id).child('/favorites/')
+        .push(payload)
+        .then(data => {
+          commit('setLoading', false)
+          commit('registerUserForMovie', {id: payload, fbKey: data.key})
+        })
+        .catch(error => {
+          commit('setLoading', false)
+        })
+    },
+    unregisterUserFromMovie({commit, getters}, payload) {
+      commit('setLoading', true)
+      const user = getters.user
+      if (!user.fbKeys) {
+        return
+      }
+      const fbKey = user.fbKeys[payload]
+      firebase.database().ref('/users/' + user.id + '/favorites/').child(fbKey)
+        .remove()
+        .then(() => {
+          commit('setLoading', false)
+          commit('unregisterUserFromMovie', payload)
+        })
+        .catch(error => {
+            commit('setError', error)          
+            commit('setLoading', false)
+        })
+    },
     async fetchMovies({ commit }) {
       const { data } = await MoviesRepository.getPopularMovies();
       commit("fetchMovies", data.results);
@@ -85,11 +130,11 @@ export const store = new Vuex.Store({
               creatorId: obj[key].creatorId
             });
           }
-          commit("setLoadedFavorites", favorites);
+          commit("setRegisteredFavorites", favorites);
           commit("setLoading", false);
         })
         .catch(error => {
-          console.log(error);
+          commit('setError', error)   
           commit("setLoading", false);
         });
     },
@@ -111,10 +156,9 @@ export const store = new Vuex.Store({
             ...favorite,
             id: key
           });
-          console.log(data);
         })
         .catch(error => {
-          console.log(error);
+          commit('setError', error)          
         });
     },
 
@@ -128,7 +172,8 @@ export const store = new Vuex.Store({
           commit("setLoading", false);
           const newUser = {
             id: user.uid,
-            favoritedMovies: []
+            registeredFavorites: [],
+            fbKeys: {}
           };
           commit("setUser", newUser);
         })
@@ -147,7 +192,8 @@ export const store = new Vuex.Store({
           commit("setLoading", false);
           const newUser = {
             id: user.uid,
-            favoritedMovies: []
+            registeredFavorites: [],
+            fbKeys: {}
           };
           commit("setUser", newUser);
         })
@@ -157,7 +203,30 @@ export const store = new Vuex.Store({
         });
     },
     autoSignIn({ commit }, payload) {
-      commit("setUser", { id: payload.uid, favoritedMovies: [] });
+      commit("setUser", { id: payload.uid, registeredFavorites: [], fbKeys:{} });
+    },
+    fetchUserData({commit, getters}){
+      commit('setLoading', true)
+      firebase.database().ref('/users/'+ getters.user.id + '/favorites').once('value').then((data) =>{
+        const dataPairs  = data.val()
+        let registeredFavorites = []
+        let swappedPairs = {}
+        for(let key in dataPairs){
+          registeredFavorites.push(dataPairs[key])
+          swappedPairs[dataPairs[key]] = key
+        }
+        
+         const updatedUser = {
+          id: getters.user.id, 
+           registeredFavorites: registeredFavorites, 
+           fbKeys: swappedPairs
+        }
+        commit('setLoading', false)
+        commit('setUser', updatedUser)
+      }).catch(error => {
+        commit('setError', error)
+        commit('setLoading', false)
+      })
     },
     logout({ commit }) {
       firebase.auth().signOut();
@@ -188,6 +257,13 @@ export const store = new Vuex.Store({
     fetchedMovies(state, getters) {
       return getters.fetchedMovies.slice(0, 5);
     },
+    registeredFavorite(state) {
+      return userId => {
+        return state.registeredFavorites.map(movies => {
+          movies.userId === userId;
+        });
+      };
+    },
     user(state) {
       return state.user;
     },
@@ -203,8 +279,8 @@ export const store = new Vuex.Store({
     loading(state) {
       return state.loading;
     },
-    loadedFavorites(state) {
-      return state.loadedFavorites;
+    registeredFavorites(state) {
+      return state.registeredFavorites;
     }
   }
 });
