@@ -1,7 +1,7 @@
 
 <template>
   <v-app>
-    <v-navigation-drawer dark temporary stateless hide-overlay v-model="sideNav">
+    <v-navigation-drawer dark temporary floating clipped hide-overlay v-model="sideNav">
       <v-list>
         <v-list-tile v-for="item in menuItems" :key="item.title" :to="item.link">
           <v-list-tile-action>
@@ -20,7 +20,7 @@
     <v-toolbar dark class="blue-contrast">
       <v-toolbar-side-icon @click.stop="sideNav = !sideNav" class="hidden-sm-and-up"></v-toolbar-side-icon>
       <v-toolbar-title>
-        <router-link to="/" tag="span" style="cursor: pointer">Movuefy</router-link>
+        <router-link to="/dashboard" tag="span" style="cursor: pointer">Movuefy</router-link>
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items class="hidden-xs-only">
@@ -57,7 +57,7 @@ export default {
 
       if (this.userIsAuthenticated) {
         menuItems = [
-          { icon: "dashboard", title: "Dashboard", link: "/home" },
+          { icon: "dashboard", title: "Dashboard", link: "/dashboard" },
           { icon: "important_devices", title: "View Movies", link: "/movies" },
           { icon: "room", title: "Favorite Movies", link: "/favorites" },
           { icon: "person", title: "Profile", link: "/profile" }

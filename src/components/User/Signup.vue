@@ -94,7 +94,7 @@ export default {
   watch: {
     user(value) {
       if (value !== null && value !== undefined) {
-        this.$router.push("/home");
+        this.$router.push("/dashboard");
       }
     }
   },

@@ -3,7 +3,7 @@
   <div>
     <v-container>
       <v-layout align-center justify-center>
-        <v-flex offset-md3 offset-lg3>
+        <v-flex xs12 md12 lg12 offset-md3 offset-lg4>
           <vue-instant
             class="search-movie"
             name="search-movie"
@@ -22,40 +22,19 @@
         </v-flex>
       </v-layout>
     </v-container>
-
+    <v-layout row wrap class="mb-2">
+      <v-flex xs12 sm10 md8 lg6 offset-sm1 offset-md2 offset-lg3>
+        <core-movie-card :currentMovie="currentMovie" :path="`${path}${movie.poster_path}`"></core-movie-card>
+      </v-flex>
+    </v-layout>
     <v-container>
-      <!-- <template v-if="result"></template> -->
       <v-layout row wrap v-for="movie in movies" :key="movie.id" class="mb-2">
         <v-flex xs12 sm10 md8 lg6 offset-sm1 offset-md2 offset-lg3>
-          <v-card class="card">
-            <v-container fluid>
-              <v-layout row justify-start>
-                <v-flex xs12 sm6 md9>
-                  <v-card-media
-                    class="card-image"
-                    :src="`https://image.tmdb.org/t/p/w500/${movie.poster_path}`"
-                    height="70vh"
-                  ></v-card-media>
-                </v-flex>
-                <v-flex xs12 sm6 md9>
-                  <v-card-title primary-title>
-                    <div>
-                      <h5 class="white--text mb-0">{{ movie.title }}</h5>
-                      <div>{{ movie.overview }}</div>
-                    </div>
-                  </v-card-title>
-                  <v-card-actions>
-                    <v-btn flat :to="'/movies/' + movie.id">
-                      <v-icon left light>arrow_forward</v-icon>View Movie
-                    </v-btn>
-                  </v-card-actions>
-                </v-flex>
-              </v-layout>
-            </v-container>
-          </v-card>
+          <core-movie-card :currentMovie="movie" :path="`${path}${movie.poster_path}`"></core-movie-card>
         </v-flex>
       </v-layout>
     </v-container>
+    <v-container></v-container>
     <v-container>
       <v-layout justify-center>
         <v-flex xs12 sm6 md9>
@@ -68,7 +47,10 @@
 
 
 <script>
-import axios from "axios";
+import { RepositoryAbstractFactory } from "../../services/RepositoryAbstractFactory";
+
+const MoviesRepository = RepositoryAbstractFactory.get("movies");
+
 export default {
   data() {
     return {
@@ -76,8 +58,10 @@ export default {
       searchterm: "",
       suggestionAttribute: "original_title",
       suggestions: [],
-      selectedEvent: "",      
-        result: null
+      selectedEvent: "",
+      path: "https://image.tmdb.org/t/p/w500",
+      result: null,
+      currentMovie: {}
     };
   },
   computed: {
@@ -89,37 +73,39 @@ export default {
     }
   },
   watch: {
-  
     searchterm: function(searchterm) {
       this.suggest(searchterm);
     }
   },
   methods: {
-    next( ) {
+    next() {
       // this.$store.dispatch("fetchMoviePage", this.$store.state.currentPage);
     },
     submit: function() {
       this.search(this.searchterm);
     },
-    suggest: function(searchterm) {
+    suggest: async function(searchterm) {
       var that = this;
       this.suggestions = [];
-      this.$store
-        .dispatch("setSearchMovies", this.searchterm)
-        .then(response => {
-          response.forEach(function(a) {
+      const { data } = await MoviesRepository.searchMovies(searchterm).then(
+        response => {
+          response.data.results.forEach(function(a) {
             that.suggestions.push(a);
           });
-        });
+        }
+      );
     },
     selected: function(current) {
-      this.selection = current;
+      console.log(current);
+      this.currentMovie = current;
     },
     changed: function() {},
-    search: function() {}
+    search: async function() {
+      const { data } = await MoviesRepository.getMovie(this.selection.id);
+    }
   },
   created() {
-     this.$store.dispatch("loadedMovies");
+    this.$store.dispatch("loadedMovies");
     // this.$store.dispatch("fetchMoviePage", 1);
   }
 };
@@ -128,7 +114,7 @@ export default {
 <style lang="sass" scoped>
 .searchbox
  .sbx-google
-    width: 49vh;
+    width: 50vh;
 
 
 .card-image 

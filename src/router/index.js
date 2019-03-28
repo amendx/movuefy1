@@ -14,8 +14,9 @@ Vue.use(Router);
 
 export default new Router({
   routes: [
+    { path: "", redirectTo: "/dashboard", pathMatch: "full" },
     {
-      path: "/home",
+      path: "/dashboard",
       name: "Home",
       component: Home
     },
@@ -27,7 +28,8 @@ export default new Router({
     {
       path: "/movies/:id",
       name: "MovieDetails",
-      component: MovieDetails
+      component: MovieDetails,
+      beforeEnter: AuthGuard
     },
     {
       path: "/favorites",
