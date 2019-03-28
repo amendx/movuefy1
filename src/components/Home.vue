@@ -45,7 +45,7 @@
 export default {
   computed: {
     movies() {
-      return this.$store.getters.loadedMovies;
+         return this.$store.getters.loadedMovies;
     },
     loading() {
       return this.$store.getters.loading;

@@ -76,8 +76,8 @@ export default {
       searchterm: "",
       suggestionAttribute: "original_title",
       suggestions: [],
-      selectedEvent: "",
-      result: null
+      selectedEvent: "",      
+        result: null
     };
   },
   computed: {
@@ -95,7 +95,7 @@ export default {
     }
   },
   methods: {
-    next() {
+    next( ) {
       // this.$store.dispatch("fetchMoviePage", this.$store.state.currentPage);
     },
     submit: function() {
