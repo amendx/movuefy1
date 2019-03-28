@@ -16,4 +16,52 @@ $theme := {
   blue-contrast: $blue-grey.darken-3
 
 }
+.fade-enter-active,
+.fade-leave-active {
+  transition-duration: 0.3s;
+  transition-property: opacity;
+  transition-timing-function: ease-in;
+}
+.fade-enter,
+.fade-leave-active {
+  opacity: 0
+}
+
+.custom-loader {
+    animation: loader 1s infinite;
+    display: flex;
+  }
+
+ @-moz-keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @-webkit-keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @-o-keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
 @import '../../node_modules/vuetify/src/stylus/main'
