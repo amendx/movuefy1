@@ -1,74 +1,73 @@
 
 <template>
   <div>
-    <v-container>
+    <v-flex xs12 md12 sm12 lg12>
       <v-layout align-center justify-center>
-        <v-flex offset-md3 offset-lg3>
-          <vue-instant
-            class="search-movie"
-            name="search-movie"
-            type="google"
-            placeholder="Search Movie..."
-            :show-autocomplete="true"
-            :suggestions="suggestions"
-            :suggestion-attribute="suggestionAttribute"
-            v-model="searchterm"
-            @selected="selected"
-            @input="changed"
-            @enter="search"
-            v-bind:style="{ width: '49vh'}"
-          ></vue-instant>
+        <v-flex xs12 md12 lg12 offset-md3 offset-lg4>
           <v-spacer></v-spacer>
         </v-flex>
       </v-layout>
-    </v-container>
-
+    </v-flex>
     <v-container>
-      <!-- <template v-if="result"></template> -->
-      <v-layout row wrap v-for="movie in movies" :key="movie.id" class="mb-2">
-        <v-flex xs12 sm10 md8 lg6 offset-sm1 offset-md2 offset-lg3>
-          <v-card class="card">
-            <v-container fluid>
-              <v-layout row justify-start>
-                <v-flex xs12 sm6 md9>
-                  <v-card-media
-                    class="card-image"
-                    :src="`https://image.tmdb.org/t/p/w500/${movie.poster_path}`"
-                    height="70vh"
-                  ></v-card-media>
-                </v-flex>
-                <v-flex xs12 sm6 md9>
-                  <v-card-title primary-title>
-                    <div>
-                      <h5 class="white--text mb-0">{{ movie.title }}</h5>
-                      <div>{{ movie.overview }}</div>
-                    </div>
-                  </v-card-title>
-                  <v-card-actions>
-                    <v-btn flat :to="'/movies/' + movie.id">
-                      <v-icon left light>arrow_forward</v-icon>View Movie
-                    </v-btn>
-                  </v-card-actions>
-                </v-flex>
-              </v-layout>
-            </v-container>
+      <v-layout align-center justify-center row fill-height>
+        <v-flex xs12 md8 sm8 lg8 align-center justify-center>
+          <v-card>
+            <v-toolbar dark color="dark">
+              <v-toolbar-title>Search movies</v-toolbar-title>
+            </v-toolbar>
+            <v-card-media>
+              <v-autocomplete
+                class="autocomplete"
+                :items="suggestions"
+                :search-input.sync="searchterm"
+                cache-items
+                v-model="currentMovie"
+                item-text="title"
+                color="white"
+                return-object
+                label="Movies"
+              ></v-autocomplete>
+            </v-card-media>
           </v-card>
         </v-flex>
       </v-layout>
     </v-container>
-    <v-container>
-      <v-layout justify-center>
-        <v-flex xs12 sm6 md9>
-          <v-pagination @input="next" :value="page" :total-visible="5" :length="5"></v-pagination>
+    <v-container v-if="hasMovie">
+      <v-layout>
+        <v-flex xs12 sm10 md8 lg6 offset-sm1 offset-md2 offset-lg3>
+          <movie-card :currentMovie="currentMovie" :path="`${path}${currentMovie.poster_path}`"></movie-card>
         </v-flex>
       </v-layout>
     </v-container>
+    <v-container v-else>
+      <v-layout row wrap wrapclass="mb-2">
+        <v-flex
+          xs12
+          sm10
+          md8
+          lg6
+          offset-sm1
+          offset-md2
+          offset-lg3
+          v-for="movie in movies"
+          :key="movie.id"
+        >
+          <movie-card :currentMovie="movie" :path="`${path}${movie.poster_path}`"></movie-card>
+        </v-flex>
+      </v-layout>
+    </v-container>
+    <v-layout align-center justify-center>
+      <pagination :page="page"/>
+    </v-layout>
   </div>
 </template>
 
 
 <script>
-import axios from "axios";
+import { RepositoryAbstractFactory } from "../../services/RepositoryAbstractFactory";
+import _ from "lodash";
+const MoviesRepository = RepositoryAbstractFactory.get("movies");
+import pagination from "../core/Pagination.vue";
 export default {
   data() {
     return {
@@ -77,8 +76,14 @@ export default {
       suggestionAttribute: "original_title",
       suggestions: [],
       selectedEvent: "",
-      result: null
+      path: "https://image.tmdb.org/t/p/w500",
+      result: null,
+      currentMovie: {},
+      hasMovie: false
     };
+  },
+  components: {
+    pagination
   },
   computed: {
     movies() {
@@ -89,48 +94,73 @@ export default {
     }
   },
   watch: {
-  
     searchterm: function(searchterm) {
       this.suggest(searchterm);
+    },
+    currentMovie(current) {
+      this.currentMovie = current;
+      if (this.currentMovie.id) this.hasMovie = true;
+      if (!hasMovie) this.searchMovies();
+    },
+    search(val) {
+      console.log(val);
     }
   },
   methods: {
-    next() {
-      // this.$store.dispatch("fetchMoviePage", this.$store.state.currentPage);
-    },
     submit: function() {
       this.search(this.searchterm);
     },
-    suggest: function(searchterm) {
+
+    suggest: async function(searchterm) {
       var that = this;
       this.suggestions = [];
-      this.$store
-        .dispatch("setSearchMovies", this.searchterm)
-        .then(response => {
-          response.forEach(function(a) {
-            that.suggestions.push(a);
-          });
-        });
+      if (searchterm.length > 0) {
+        const { data } = await MoviesRepository.searchMovies(searchterm).then(
+          response => {
+            response.data.results.forEach(function(a) {
+              that.suggestions.push(a);
+            });
+          }
+        );
+      } else {
+        this.searchMovies();
+      }
     },
-    selected: function(current) {
-      this.selection = current;
+    searchMovies() {
+      this.$store.dispatch("loadedMovies");
+      this.hasMovie = false;
     },
-    changed: function() {},
-    search: function() {}
+
+    changed: function(cf) {
+      if (this.currentMovie.id) this.hasMovie = true;
+      if (!hasMovie) this.searchMovies();
+    },
+    search: async function() {
+      const { data } = await MoviesRepository.getMovie(this.currentMovie.id);
+    }
   },
   created() {
-     this.$store.dispatch("loadedMovies");
-    // this.$store.dispatch("fetchMoviePage", 1);
+    this.$store.dispatch("loadedMovies");
   }
 };
 </script>
 
 <style lang="sass" scoped>
+
+.autocomplete
+  margin: 30px;
+
 .searchbox
  .sbx-google
-    width: 49vh;
+    width: 50vh;
 
+.card-search
+  margin: 30px;
+  padding-bottom: 30px;
 
+.search-movie 
+  z-index: 3;
+  
 .card-image 
   transform: scale(0.7, 0.7);
 

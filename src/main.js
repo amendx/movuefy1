@@ -6,13 +6,19 @@ import router from "./router";
 import * as firebase from "firebase";
 import "vue-instant/dist/vue-instant.css";
 import VueInstant from "vue-instant";
-import AlertComp from "./components/Shared/Alert.vue";
-import FavoriteDialog from './components/Movies/Favorite/FavoriteDialog.vue'
+import AlertComp from "./components/core/Alert.vue";
+import FavoriteDialog from "./components/Movies/Favorite/FavoriteDialog.vue";
+import Toolbar from "./components/core/Toolbar";
+import Loading from "./components/core/Loading";
+import MovieCard from "./components/core/MovieCard";
 
 Vue.use(VueInstant);
 Vue.use(Vuetify);
 Vue.component("app-alert", AlertComp);
-Vue.component("app-movie-favorite-dialog", FavoriteDialog)
+Vue.component("movie-card", MovieCard);
+Vue.component("toolbar", Toolbar);
+Vue.component("loading", Loading);
+Vue.component("app-movie-favorite-dialog", FavoriteDialog);
 
 Vue.config.productionTip = false;
 
