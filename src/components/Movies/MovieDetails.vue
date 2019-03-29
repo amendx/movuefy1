@@ -9,7 +9,6 @@
                 <div class="container">
                   <v-flex xs12>
                     <a href="#">
-                      <!-- :src="`https://image.tmdb.org/t/p/original${this.currentMovie.poster_path}`" -->
                       <img
                         v-if="this.currentMovie.poster_path"
                         alt="cover"
@@ -30,15 +29,8 @@
                         <v-flex xs12 md12 class="title2">{{this.currentMovie.tagline}}</v-flex>
                         <v-flex xs12 md12 lg6>
                           <v-rating v-model="currentMovie.vote_average"></v-rating>
-                          <span class="likes">
-                            <div>{{voteCounted}}</div>likes
-                          </span>
                         </v-flex>
-                        <!-- <v-flex xs9>
-                      
-                        </v-flex>-->
                       </v-layout>
-                      <!-- </div> -->
                     </v-flex>
                   </div>
 
@@ -55,36 +47,26 @@
                     <v-flex xs12 md8 offset-md3>
                       <v-card-text class="v-description">
                         <p>{{this.currentMovie.overview}}</p>
-
-                        <!-- end avatars -->
                       </v-card-text>
                     </v-flex>
                   </div>
 
-                  <!-- end description -->
                 </div>
-                <!-- </v-container> -->
-                <!-- end container -->
+                
               </div>
             </v-card-text>
+                 <v-divider ></v-divider>
+            <v-card-actions>
+               <v-layout row  justify-center>
+                <app-movie-favorite-dialog :movieId="this.currentMovie.id"></app-movie-favorite-dialog>
+               </v-layout>
+            </v-card-actions>
           </v-card>
         </v-flex>
       </v-layout>
 
-      <!-- end movie-card -->
     </v-container>
-    <v-container>
-      <v-card>
-        <v-toolbar dark color="dark">
-          <v-toolbar-title>Search Movies</v-toolbar-title>
-        </v-toolbar>
-        <v-card-text>Want to add this movie to your favorite's list?</v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <app-movie-favorite-dialog :movieId="this.currentMovie.id"></app-movie-favorite-dialog>
-        </v-card-actions>
-      </v-card>
-    </v-container>
+    
   </div>
 </template>
 
@@ -95,7 +77,7 @@ const MoviesRepository = RepositoryAbstractFactory.get("movies");
 export default {
   data() {
     return {
-      currentMovie: {}
+      currentMovie: {},
     };
   },
   async created() {
@@ -103,7 +85,7 @@ export default {
   },
   computed: {
     voteCounted: function() {
-      return this.currentMovie.vote_count;
+      return (this.currentMovie.vote_average / 3);
     },
     movieId: function() {
       return this.$route.params.id;
@@ -220,11 +202,6 @@ a:hover
   font-weight: 300;
   margin-bottom: 15px;
   
-
-.likes  
-  margin-left: 24px;
-  padding: 10px 0;
-  font-size: 1.2em;
 
 .likes:before 
   content: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/icon_like.png");

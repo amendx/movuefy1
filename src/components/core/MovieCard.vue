@@ -4,7 +4,7 @@
       <v-container fluid>
         <v-layout row justify-start>
           <v-flex xs12 sm6 md9>
-            <v-card-media class="card-image" :src="path" height="70vh"></v-card-media>
+            <v-card-media class="card-image" :src="`${path}${currentMovie.poster_path}`" height="70vh"></v-card-media>
           </v-flex>
           <v-flex xs12 sm6 md9>
             <v-card-text>
@@ -14,23 +14,24 @@
                     <ul class="movie-gen">
                       <li v-if="currentMovie.adult">PG-13 /</li>
                       <li v-else>FREE /</li>
-                      <li>{{currentMovie.runtime}} 2h49min /</li>
-                      <li>{{currentMovie.genres}} SciFi, Terror</li>
+                      <li v-if="currentMovie.runtime">{{currentMovie.runtime}} /</li>
+                      <li v-else>225 min </li>
+                      <li v-for="genre in genres" :key="genre.name">
+                        {{genre}},</li>
                     </ul>
                   </v-flex>
                 </div>
 
                 <div class="mr-grid summary-row">
-                  <!-- <div class="col2"> -->
-                  <v-flex row wrap>
+                    <v-flex xs12 sm6 md12>
                     <h5>SUMMARY</h5>
                     <ul class="movie-likes">
                       <li>
-                        <i class="material-icons">&#xe106;</i>
+                        <v-icon color="red">favorite</v-icon>
                         {{currentMovie.vote_count}}
                       </li>
                       <li>
-                        <i class="material-icons">&#xe033;</i>
+                         <v-icon color="red">rate_review</v-icon>
                         {{currentMovie.vote_average}}
                       </li>
                     </ul>
@@ -64,7 +65,18 @@
 import materialCard from "./Card.vue";
 export default {
   components: { materialCard },
-  props: ["currentMovie", "path"]
+  data(){
+    return {
+      path: "https://image.tmdb.org/t/p/original"
+    }
+  },
+  props: ["currentMovie"],
+  computed:{
+    genres(){
+      if(this.currentMovie.genres)
+      return this.currentMovie.genres.map(value => value.name)
+    }
+  }
 };
 </script>
 

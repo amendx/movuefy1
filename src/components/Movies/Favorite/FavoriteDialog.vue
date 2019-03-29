@@ -1,11 +1,15 @@
 <template>
   <v-dialog v-model="registerDialog" max-width="25%">
+
     <v-btn
       primary
       class="register-btn"
       accent
+      block
       slot="activator"
-    >{{ userIsRegistered ? 'Unregister' : 'Register' }}</v-btn>
+      :style="'{ padding: 30px }'">
+      {{ userIsRegistered ? 'Favorite' : 'Unfavorite' }}</v-btn>
+   
     <v-card>
       <v-container>
         <v-layout row wrap>
@@ -69,8 +73,10 @@ export default {
 };
 </script>
 
-<style>
-.register-btn {
-  margin: 20px;
-}
+<style lang="scss">
+    .v-dialog{
+        &__activator{
+        margin: 25px 10px;
+        }
+    }
 </style>
