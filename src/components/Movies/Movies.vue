@@ -2,6 +2,10 @@
 <template>
   <div>
     <v-container>
+      <v-card dark>
+        <v-card-title>
+          Search Movies
+        </v-card-title>
       <v-layout align-center justify-center>
         <v-flex xs12 md12 lg12 offset-md3 offset-lg4>
           <vue-instant
@@ -21,27 +25,30 @@
           <v-spacer></v-spacer>
         </v-flex>
       </v-layout>
+      </v-card>
     </v-container>
-    <v-layout row wrap class="mb-2">
-      <v-flex xs12 sm10 md8 lg6 offset-sm1 offset-md2 offset-lg3>
-        <core-movie-card :currentMovie="currentMovie" :path="`${path}${movie.poster_path}`"></core-movie-card>
-      </v-flex>
-    </v-layout>
-    <v-container>
+    
+    <v-container v-if="hasMovie">
+       <v-layout >
+        <v-flex xs12 sm10 md8 lg6 offset-sm1 offset-md2 offset-lg3>
+          <core-movie-card :currentMovie="currentMovie" :path="`${path}${currentMovie.poster_path}`"></core-movie-card>
+        </v-flex>
+      </v-layout>
+    </v-container>
+    <v-container v-else>
       <v-layout row wrap v-for="movie in movies" :key="movie.id" class="mb-2">
         <v-flex xs12 sm10 md8 lg6 offset-sm1 offset-md2 offset-lg3>
+       
           <core-movie-card :currentMovie="movie" :path="`${path}${movie.poster_path}`"></core-movie-card>
+
         </v-flex>
       </v-layout>
+       
+    
     </v-container>
-    <v-container></v-container>
-    <v-container>
-      <v-layout justify-center>
-        <v-flex xs12 sm6 md9>
-          <v-pagination @input="next" :value="page" :total-visible="5" :length="5"></v-pagination>
-        </v-flex>
-      </v-layout>
-    </v-container>
+    <v-layout align-center justify-center>
+    <pagination :page="page"/>
+    </v-layout>
   </div>
 </template>
 
@@ -50,7 +57,7 @@
 import { RepositoryAbstractFactory } from "../../services/RepositoryAbstractFactory";
 
 const MoviesRepository = RepositoryAbstractFactory.get("movies");
-
+import pagination from '../core/Pagination.vue'
 export default {
   data() {
     return {
@@ -61,8 +68,12 @@ export default {
       selectedEvent: "",
       path: "https://image.tmdb.org/t/p/w500",
       result: null,
-      currentMovie: {}
+      currentMovie: {}, 
+      hasMovie: false
     };
+  },
+  components:  {
+    pagination
   },
   computed: {
     movies() {
@@ -78,35 +89,46 @@ export default {
     }
   },
   methods: {
-    next() {
-      // this.$store.dispatch("fetchMoviePage", this.$store.state.currentPage);
-    },
     submit: function() {
       this.search(this.searchterm);
+      console.log('submit')
     },
     suggest: async function(searchterm) {
       var that = this;
       this.suggestions = [];
+      if(searchterm.length >0 ){
       const { data } = await MoviesRepository.searchMovies(searchterm).then(
         response => {
           response.data.results.forEach(function(a) {
             that.suggestions.push(a);
           });
-        }
-      );
+        });  
+        } else {
+      this.searchMovies()
+      }
+    },
+    searchMovies(){
+        this.$store.dispatch("loadedMovies");
+        this.hasMovie = false;
     },
     selected: function(current) {
-      console.log(current);
       this.currentMovie = current;
+      if(!current)
+      this.searchMovies()
     },
-    changed: function() {},
+    changed: function(cf) {
+      if(this.currentMovie.id)
+        this.hasMovie = true;
+        if(!hasMovie)
+        this.searchMovies()
+    },
     search: async function() {
-      const { data } = await MoviesRepository.getMovie(this.selection.id);
+      const { data } = await MoviesRepository.getMovie(this.currentMovie.id)
+      console.log('changed')
     }
   },
   created() {
     this.$store.dispatch("loadedMovies");
-    // this.$store.dispatch("fetchMoviePage", 1);
   }
 };
 </script>

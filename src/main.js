@@ -8,16 +8,16 @@ import "vue-instant/dist/vue-instant.css";
 import VueInstant from "vue-instant";
 import AlertComp from "./components/Shared/Alert.vue";
 import FavoriteDialog from "./components/Movies/Favorite/FavoriteDialog.vue";
-import Drawer from "./components/core/Drawer";
-import Toolbar from "./components/core/Toolbar";
+
 import MovieCard from "./components/core/MovieCard";
+
+
 Vue.use(VueInstant);
 Vue.use(Vuetify);
 Vue.component("app-alert", AlertComp);
-Vue.component("core-drawer", Drawer);
-Vue.component("core-toolbar", Toolbar);
 Vue.component("core-movie-card", MovieCard);
 Vue.component("app-movie-favorite-dialog", FavoriteDialog);
+
 
 Vue.config.productionTip = false;
 

@@ -3,7 +3,7 @@ import Router from "vue-router";
 import Home from "@/components/Home";
 import Movies from "@/components/Movies/Movies";
 import Favorites from "@/components/Movies/Favorites";
-import MovieCard from "@/components/Movies/MovieCard";
+import MovieCard from "@/components/core/MovieCard";
 import MovieDetails from "@/components/Movies/MovieDetails";
 import SaveFavorite from "@/components/Movies/SaveFavorite";
 import Profile from "@/components/User/Profile";

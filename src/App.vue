@@ -1,6 +1,6 @@
 
 <template>
-  <v-app>
+  <v-app dark>
     <v-navigation-drawer dark temporary floating clipped hide-overlay v-model="sideNav">
       <v-list>
         <v-list-tile v-for="item in menuItems" :key="item.title" :to="item.link">
