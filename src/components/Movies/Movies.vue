@@ -1,53 +1,63 @@
 
 <template>
   <div>
-    <v-container>
-      <v-card dark>
-        <v-card-title>
-          Search Movies
-        </v-card-title>
+    <v-flex xs12 md12 sm12 lg12>
       <v-layout align-center justify-center>
         <v-flex xs12 md12 lg12 offset-md3 offset-lg4>
-          <vue-instant
-            class="search-movie"
-            name="search-movie"
-            type="google"
-            placeholder="Search Movie..."
-            :show-autocomplete="true"
-            :suggestions="suggestions"
-            :suggestion-attribute="suggestionAttribute"
-            v-model="searchterm"
-            @selected="selected"
-            @input="changed"
-            @enter="search"
-            v-bind:style="{ width: '49vh'}"
-          ></vue-instant>
           <v-spacer></v-spacer>
         </v-flex>
       </v-layout>
-      </v-card>
+    </v-flex>
+    <v-container>
+      <v-layout align-center justify-center row fill-height>
+        <v-flex xs12 md8 sm8 lg8 align-center justify-center>
+          <v-card>
+            <v-toolbar dark color="dark">
+              <v-toolbar-title>Search movies</v-toolbar-title>
+            </v-toolbar>
+            <v-card-media>
+              <v-autocomplete
+                class="autocomplete"
+                :items="suggestions"
+                :search-input.sync="searchterm"
+                cache-items
+                v-model="currentMovie"
+                item-text="title"
+                color="white"
+                return-object
+                label="Movies"
+              ></v-autocomplete>
+            </v-card-media>
+          </v-card>
+        </v-flex>
+      </v-layout>
     </v-container>
-    
     <v-container v-if="hasMovie">
-       <v-layout >
+      <v-layout>
         <v-flex xs12 sm10 md8 lg6 offset-sm1 offset-md2 offset-lg3>
-          <core-movie-card :currentMovie="currentMovie" :path="`${path}${currentMovie.poster_path}`"></core-movie-card>
+          <movie-card :currentMovie="currentMovie" :path="`${path}${currentMovie.poster_path}`"></movie-card>
         </v-flex>
       </v-layout>
     </v-container>
     <v-container v-else>
-      <v-layout row wrap v-for="movie in movies" :key="movie.id" class="mb-2">
-        <v-flex xs12 sm10 md8 lg6 offset-sm1 offset-md2 offset-lg3>
-       
-          <core-movie-card :currentMovie="movie" :path="`${path}${movie.poster_path}`"></core-movie-card>
-
+      <v-layout row wrap wrapclass="mb-2">
+        <v-flex
+          xs12
+          sm10
+          md8
+          lg6
+          offset-sm1
+          offset-md2
+          offset-lg3
+          v-for="movie in movies"
+          :key="movie.id"
+        >
+          <movie-card :currentMovie="movie" :path="`${path}${movie.poster_path}`"></movie-card>
         </v-flex>
       </v-layout>
-       
-    
     </v-container>
     <v-layout align-center justify-center>
-    <pagination :page="page"/>
+      <pagination :page="page"/>
     </v-layout>
   </div>
 </template>
@@ -55,9 +65,9 @@
 
 <script>
 import { RepositoryAbstractFactory } from "../../services/RepositoryAbstractFactory";
-
+import _ from "lodash";
 const MoviesRepository = RepositoryAbstractFactory.get("movies");
-import pagination from '../core/Pagination.vue'
+import pagination from "../core/Pagination.vue";
 export default {
   data() {
     return {
@@ -68,11 +78,11 @@ export default {
       selectedEvent: "",
       path: "https://image.tmdb.org/t/p/w500",
       result: null,
-      currentMovie: {}, 
+      currentMovie: {},
       hasMovie: false
     };
   },
-  components:  {
+  components: {
     pagination
   },
   computed: {
@@ -86,45 +96,47 @@ export default {
   watch: {
     searchterm: function(searchterm) {
       this.suggest(searchterm);
+    },
+    currentMovie(current) {
+      this.currentMovie = current;
+      if (this.currentMovie.id) this.hasMovie = true;
+      if (!hasMovie) this.searchMovies();
+    },
+    search(val) {
+      console.log(val);
     }
   },
   methods: {
     submit: function() {
       this.search(this.searchterm);
-      console.log('submit')
     },
+
     suggest: async function(searchterm) {
       var that = this;
       this.suggestions = [];
-      if(searchterm.length >0 ){
-      const { data } = await MoviesRepository.searchMovies(searchterm).then(
-        response => {
-          response.data.results.forEach(function(a) {
-            that.suggestions.push(a);
-          });
-        });  
-        } else {
-      this.searchMovies()
+      if (searchterm.length > 0) {
+        const { data } = await MoviesRepository.searchMovies(searchterm).then(
+          response => {
+            response.data.results.forEach(function(a) {
+              that.suggestions.push(a);
+            });
+          }
+        );
+      } else {
+        this.searchMovies();
       }
     },
-    searchMovies(){
-        this.$store.dispatch("loadedMovies");
-        this.hasMovie = false;
+    searchMovies() {
+      this.$store.dispatch("loadedMovies");
+      this.hasMovie = false;
     },
-    selected: function(current) {
-      this.currentMovie = current;
-      if(!current)
-      this.searchMovies()
-    },
+
     changed: function(cf) {
-      if(this.currentMovie.id)
-        this.hasMovie = true;
-        if(!hasMovie)
-        this.searchMovies()
+      if (this.currentMovie.id) this.hasMovie = true;
+      if (!hasMovie) this.searchMovies();
     },
     search: async function() {
-      const { data } = await MoviesRepository.getMovie(this.currentMovie.id)
-      console.log('changed')
+      const { data } = await MoviesRepository.getMovie(this.currentMovie.id);
     }
   },
   created() {
@@ -134,11 +146,21 @@ export default {
 </script>
 
 <style lang="sass" scoped>
+
+.autocomplete
+  margin: 30px;
+
 .searchbox
  .sbx-google
     width: 50vh;
 
+.card-search
+  margin: 30px;
+  padding-bottom: 30px;
 
+.search-movie 
+  z-index: 3;
+  
 .card-image 
   transform: scale(0.7, 0.7);
 

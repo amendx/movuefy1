@@ -1,13 +1,16 @@
 <template>
   <v-container>
-    <v-layout row v-if="error">
-      <v-flex xs12 sm6 offset-sm3>
+    <v-layout align-center justify-center row v-if="error">
+      <v-flex xs12 sm6 align-center justify-center>
         <app-alert @dissmissed="onDissmissed" :text="error.message"></app-alert>
       </v-flex>
     </v-layout>
-    <v-layout row>
-      <v-flex xs12 sm6 offset-sm3>
+    <v-layout align-center justify-center row fill-height>
+      <v-flex xs12 sm6 align-center justify-center>
         <v-card>
+          <v-toolbar dark color="dark">
+            <v-toolbar-title>Sign In</v-toolbar-title>
+          </v-toolbar>
           <v-card-text>
             <v-container>
               <form @submit.prevent="onSignin">

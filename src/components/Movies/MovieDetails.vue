@@ -1,167 +1,91 @@
 <template>
-<div>
-  <v-container>
-    <v-layout row wrap>
-      <v-flex xs12>
-        <v-card>
-          <v-card-text class="d-flex">
-            <div class="movie-card">
-              <div class="container">
-                <v-flex xs12>
-                  <a href="#">
-                    <!-- :src="`https://image.tmdb.org/t/p/original${this.currentMovie.poster_path}`" -->
-                    <img
-                      v-if="this.currentMovie.poster_path"
-                      alt="cover"
-                      :src="`https://image.tmdb.org/t/p/original${this.currentMovie.poster_path}`"
-                      class="cover"
-                    >
-                  </a>
-                </v-flex>
+  <div>
+    <v-container>
+      <v-layout row wrap>
+        <v-flex xs12>
+          <v-card>
+            <v-card-text class="d-flex">
+              <div class="movie-card">
+                <div class="container">
+                  <v-flex xs12>
+                    <a href="#">
+                      <!-- :src="`https://image.tmdb.org/t/p/original${this.currentMovie.poster_path}`" -->
+                      <img
+                        v-if="this.currentMovie.poster_path"
+                        alt="cover"
+                        :src="`https://image.tmdb.org/t/p/original${this.currentMovie.poster_path}`"
+                        class="cover"
+                      >
+                    </a>
+                  </v-flex>
 
-                <div class="hero" v-if="this.currentMovie.backdrop_path">
-                  <v-flex class="details">
-                    <v-layout row wrap class="hidden-sm-only">
-                      <v-flex xs12 md12 lg12 class="title1">
-                        {{this.currentMovie.title}}
-                        <span>PG-13</span>
-                      </v-flex>
+                  <div class="hero" v-if="this.currentMovie.backdrop_path">
+                    <v-flex class="details">
+                      <v-layout row wrap class="hidden-sm-only">
+                        <v-flex xs12 md12 lg12 class="title1">
+                          {{this.currentMovie.title}}
+                          <span>PG-13</span>
+                        </v-flex>
+
+                        <v-flex xs12 md12 class="title2">{{this.currentMovie.tagline}}</v-flex>
+                        <v-flex xs12 md12 lg6>
+                          <v-rating v-model="currentMovie.vote_average"></v-rating>
+                          <span class="likes">
+                            <div>{{voteCounted}}</div>likes
+                          </span>
+                        </v-flex>
+                        <!-- <v-flex xs9>
+                      
+                        </v-flex>-->
+                      </v-layout>
+                      <!-- </div> -->
+                    </v-flex>
+                  </div>
+
+                  <div class="description">
+                    <v-layout class="hidden-sm-and-up" justify-center row wrap>
+                      <v-flex xs12 md12 lg12 class="title3">{{this.currentMovie.title}}</v-flex>
 
                       <v-flex xs12 md12 class="title2">{{this.currentMovie.tagline}}</v-flex>
-                      <v-flex xs12 md12 lg6>
-                        <fieldset class="rating">
-                          <input type="radio" id="star5" name="rating" value="5">
-                          <label class="full" for="star5" title="Awesome - 5 stars"></label>
-                          <input type="radio" id="star4half" name="rating" value="4 and a half">
-                          <label class="half" for="star4half" title="Pretty good - 4.5 stars"></label>
-                          <input type="radio" id="star4" name="rating" value="4" checked>
-                          <label class="full" for="star4" title="Pretty good - 4 stars"></label>
-                          <input type="radio" id="star3half" name="rating" value="3 and a half">
-                          <label class="half" for="star3half" title="Meh - 3.5 stars"></label>
-                          <input type="radio" id="star3" name="rating" value="3">
-                          <label class="full" for="star3" title="Meh - 3 stars"></label>
-                          <input type="radio" id="star2half" name="rating" value="2 and a half">
-                          <label class="half" for="star2half" title="Kinda bad - 2.5 stars"></label>
-                          <input type="radio" id="star2" name="rating" value="2">
-                          <label class="full" for="star2" title="Kinda bad - 2 stars"></label>
-                          <input type="radio" id="star1half" name="rating" value="1 and a half">
-                          <label class="half" for="star1half" title="Meh - 1.5 stars"></label>
-                          <input type="radio" id="star1" name="rating" value="1">
-                          <label class="full" for="star1" title="Sucks big time - 1 star"></label>
-                          <input type="radio" id="starhalf" name="rating" value="half">
-                          <label class="half" for="starhalf" title="Sucks big time - 0.5 stars"></label>
-                        </fieldset>
-                        <span class="likes">
-                          <div>{{voteCounted}}</div>likes
-                        </span>
+                      <v-flex xs12 md12 lg12>
+                        <v-rating v-model="currentMovie.vote_average"></v-rating>
+                        <span class="likes">{{currentMovie.vote_count}} likes</span>
                       </v-flex>
-                      <!-- <v-flex xs9>
-                      
-                      </v-flex>-->
                     </v-layout>
-                    <!-- </div> -->
-                  </v-flex>
-                </div>
+                    <v-flex xs12 md8 offset-md3>
+                      <v-card-text class="v-description">
+                        <p>{{this.currentMovie.overview}}</p>
 
-                <div class="description">
-                  <!-- <v-flex xs2 md2 sm2>
-                    <div class="column1">
-                      <span class="tag">action</span>
-                      <span class="tag">fantasy</span>
-                      <span class="tag">adventure</span>
-                    </div>
-                  </v-flex>-->
-                  <!-- end column1 -->
-
-                  <!-- <v-flex xs10 sm7 md10 offset-xs3 offset-md2> -->
-                  <v-layout class="hidden-sm-and-up" justify-center row wrap>
-                    <v-flex xs12 md12 lg12 class="title3">{{this.currentMovie.title}}</v-flex>
-
-                    <v-flex xs12 md12 class="title2">{{this.currentMovie.tagline}}</v-flex>
-                    <v-flex xs12 md12>
-                      <fieldset class="rating">
-                        <input type="radio" id="star5" name="rating" value="5">
-                        <label class="full" for="star5" title="Awesome - 5 stars"></label>
-                        <input type="radio" id="star4half" name="rating" value="4 and a half">
-                        <label class="half" for="star4half" title="Pretty good - 4.5 stars"></label>
-                        <input type="radio" id="star4" name="rating" value="4" checked>
-                        <label class="full" for="star4" title="Pretty good - 4 stars"></label>
-                        <input type="radio" id="star3half" name="rating" value="3 and a half">
-                        <label class="half" for="star3half" title="Meh - 3.5 stars"></label>
-                        <input type="radio" id="star3" name="rating" value="3">
-                        <label class="full" for="star3" title="Meh - 3 stars"></label>
-                        <input type="radio" id="star2half" name="rating" value="2 and a half">
-                        <label class="half" for="star2half" title="Kinda bad - 2.5 stars"></label>
-                        <input type="radio" id="star2" name="rating" value="2">
-                        <label class="full" for="star2" title="Kinda bad - 2 stars"></label>
-                        <input type="radio" id="star1half" name="rating" value="1 and a half">
-                        <label class="half" for="star1half" title="Meh - 1.5 stars"></label>
-                        <input type="radio" id="star1" name="rating" value="1">
-                        <label class="full" for="star1" title="Sucks big time - 1 star"></label>
-                        <input type="radio" id="starhalf" name="rating" value="half">
-                        <label class="half" for="starhalf" title="Sucks big time - 0.5 stars"></label>
-                      </fieldset>
+                        <!-- end avatars -->
+                      </v-card-text>
                     </v-flex>
-                    <v-flex xs12>
-                      <span class="likes">{{this.currentMovie.vote_count}} likes</span>
-                    </v-flex>
-                  </v-layout>
-                  <v-flex xs12 md8 offset-md3>
-                    <v-card-text class="v-description">
-                      <p>{{this.currentMovie.overview}}</p>
+                  </div>
 
-                      <div class="avatars">
-                        <a href="#" data-tooltip="Person 1" data-placement="top">
-                          <img
-                            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/hobbit_avatar1.png"
-                            alt="avatar1"
-                          >
-                        </a>
-
-                        <a href="#" data-tooltip="Person 2" data-placement="top">
-                          <img
-                            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/hobbit_avatar2.png"
-                            alt="avatar2"
-                          >
-                        </a>
-
-                        <a href="#" data-tooltip="Person 3" data-placement="top">
-                          <img
-                            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/hobbit_avatar3.png"
-                            alt="avatar3"
-                          >
-                        </a>
-                      </div>
-                      <!-- end avatars -->
-                    </v-card-text>
-                  </v-flex>
+                  <!-- end description -->
                 </div>
-
-                <!-- end description -->
+                <!-- </v-container> -->
+                <!-- end container -->
               </div>
-              <!-- </v-container> -->
-              <!-- end container -->
-            </div>
+            </v-card-text>
+          </v-card>
+        </v-flex>
+      </v-layout>
 
-          </v-card-text>
-          
-        </v-card>
-      </v-flex>
-    </v-layout>
-
-    <!-- end movie-card -->
-  </v-container>
-<v-container>
-<v-card>
-  <v-card-text> resiterrrrr </v-card-text>
-  <v-card-actions>
-            <v-spacer></v-spacer>
-            <app-movie-favorite-dialog
-              :meetupId="movieId"></app-movie-favorite-dialog>
-          </v-card-actions>
-</v-card>
-</v-container>
-</div>
+      <!-- end movie-card -->
+    </v-container>
+    <v-container>
+      <v-card>
+        <v-toolbar dark color="dark">
+          <v-toolbar-title>Search Movies</v-toolbar-title>
+        </v-toolbar>
+        <v-card-text>Want to add this movie to your favorite's list?</v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <app-movie-favorite-dialog :movieId="this.currentMovie.id"></app-movie-favorite-dialog>
+        </v-card-actions>
+      </v-card>
+    </v-container>
+  </div>
 </template>
 
 <script>
@@ -182,7 +106,7 @@ export default {
       return this.currentMovie.vote_count;
     },
     movieId: function() {
-      return this.$route.params.id
+      return this.$route.params.id;
     }
   },
   methods: {

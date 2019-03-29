@@ -10,6 +10,7 @@
         <v-icon left dark>{{ item.icon }}</v-icon>
         {{ item.title }}
       </v-btn>
+
       <v-btn v-if="userIsAuthenticated" flat @click="onLogout">
         <v-icon left dark>exit_to_app</v-icon>Logout
       </v-btn>
@@ -19,8 +20,21 @@
 
 <script>
 export default {
-  name: "core-drawer",
-  props: ["sideNav", "menuItems"]
+  name: "toolbar",
+  props: ["menuItems"],
+  computed: {
+    userIsAuthenticated() {
+      return (
+        this.$store.getters.user !== null &&
+        this.$store.getters.user !== undefined
+      );
+    }
+  },
+  methods: {
+    onLogout() {
+      this.$store.dispatch("logout");
+    }
+  }
 };
 </script>
 

@@ -1,35 +1,17 @@
 <template>
   <v-container>
-    <v-layout row wrap v-if="userIsAuthenticated">
-      <v-flex xs12 sm6 class="text-xs-center text-sm-right">
-        <v-btn large router class="primary">Explore Movies</v-btn>
-      </v-flex>
-      <v-flex xs12 sm6 class="text-xs-center text-sm-left">
-        <v-btn large router to="/savefavorite" class="primary">Organize Favorites</v-btn>
-      </v-flex>
-    </v-layout>
-    <v-layout>
-      <v-flex xs12 class="text-xs-center">
-        <v-card>
-          <v-progress-circular
-            indeterminate
-            class="primary--text"
-            :width="7"
-            :size="70"
-            v-if="loading"
-          ></v-progress-circular>
-        </v-card>
-      </v-flex>
-    </v-layout>
+    <loading :loading="loading"></loading>
     <v-layout row wrap class="mt-2" v-if="!loading">
       <v-flex xs12>
         <v-card>
-          <v-card-title>Featured Movies</v-card-title>
-          <v-carousel>
+          <v-toolbar dark color="dark">
+            <v-toolbar-title>Featured Movies</v-toolbar-title>
+          </v-toolbar>
+          <v-carousel hide-delimiters="true">
             <v-carousel-item
               v-for="movie in movies"
               @click="onLoadMovie(movie.id)"
-              :src="`https://image.tmdb.org/t/p/original/${movie.backdrop_path}`"
+              :src="`${posterPath}${movie.backdrop_path}`"
               :key="movie.id"
             >
               <div class="title">{{ movie.title }}</div>
@@ -39,18 +21,16 @@
       </v-flex>
     </v-layout>
     <v-spacer></v-spacer>
-    <v-layout row wrap class="mt-2">
-      <v-flex xs12 class="text-xs-center">
-        <v-card>
-          <p>Check out the latest movies!</p>
-        </v-card>
-      </v-flex>
-    </v-layout>
   </v-container>
 </template>
 
 <script>
 export default {
+  data() {
+    return {
+      posterPath: "https://image.tmdb.org/t/p/original"
+    };
+  },
   computed: {
     movies() {
       return this.$store.getters.loadedMovies;
@@ -77,6 +57,10 @@ export default {
 </script>
 
 <style scoped>
+.explore-movies {
+  margin: 30px;
+  padding: 30px 10px;
+}
 .title {
   position: absolute;
   bottom: 50px;

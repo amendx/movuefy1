@@ -10,7 +10,6 @@ export default {
     currentMovie: null
   },
   mutations: {
-  
     loadMovies(state, payload) {
       state.loadedMovies = payload;
     },
@@ -22,7 +21,6 @@ export default {
     }
   },
   actions: {
-    
     async loadedMovies({ commit }) {
       const { data } = await MoviesRepository.getPopularMovies();
       commit("loadMovies", data.results);
@@ -42,39 +40,35 @@ export default {
       commit("setCurrentMovie", data.results);
     },
 
-    loadFavorites({ commit }) {
+    loadFavorites({ commit, getters }) {
       commit("setLoading", true);
       firebase
         .database()
-        .ref("favorites")
+        .ref("/users/" + getters.user.id)
+        .child("/favorites/")
         .once("value")
         .then(data => {
           const favorites = [];
           const obj = data.val();
           for (let key in obj) {
             favorites.push({
-              id: key,
-              title: obj[key].title,
-              description: obj[key].description,
-              movieId: obj[key].movieId,
-              creatorId: obj[key].creatorId
+              id: obj[key].creatorId,
+              movieId: obj[key].movieId
             });
           }
           commit("setRegisteredFavorites", favorites);
           commit("setLoading", false);
         })
         .catch(error => {
-          commit('setError', error)   
+          commit("setError", error);
           commit("setLoading", false);
         });
     },
 
     saveFavorite({ commit, getters }, payload) {
       const favorite = {
-        title: payload.title,
-        movieId: payload.movieId,
-        description: payload.description,
-        creatorId: getters.user.id
+        id: getters.user.id,
+        movieId: payload.movieId
       };
       firebase
         .database()
@@ -88,15 +82,18 @@ export default {
           });
         })
         .catch(error => {
-          commit('setError', error)          
+          commit("setError", error);
         });
-    },
+    }
   },
   getters: {
     loadedMovies(state) {
       return state.loadedMovies.sort((movA, movB) => {
         return movA.release_date > movB.release_date;
       });
+    },
+    currentMovie(state) {
+      return state.currentMovie;
     },
     loadedMovie(state) {
       return movieId => {
@@ -105,11 +102,11 @@ export default {
         });
       };
     },
-featuredMovies(state, getters){
-    return getters.loadedMovies.slice(0,7)
-},
+    featuredMovies(state, getters) {
+      return getters.loadedMovies.slice(0, 7);
+    },
     registeredFavorites(state) {
       return state.registeredFavorites;
     }
   }
-}
+};

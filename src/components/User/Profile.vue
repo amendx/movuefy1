@@ -1,139 +1,39 @@
 <template>
-  <v-container
-    fill-height
-    fluid
-    grid-list-xl>
-    <v-layout
-      justify-center
-      wrap
-    >
-      <v-flex
-        xs12
-        md8
-      >
-        <material-card
-          color="green"
-          title="Edit Profile"
-          text="Complete your profile"
-        >
+  <v-container fill-height fluid grid-list-xl>
+    <v-layout justify-center wrap>
+      <v-flex xs12 md8>
+        <material-card color="black" title="Your Profile" text="Complete your profile">
           <v-form>
             <v-container py-0>
               <v-layout wrap>
-                <v-flex
-                  xs12
-                  md4
-                >
-                  <v-text-field
-                    label="Company (disabled)"
-                    disabled/>
-                </v-flex>
-                <v-flex
-                  xs12
-                  md4
-                >
-                  <v-text-field
-                    class="purple-input"
-                    label="User Name"
-                  />
-                </v-flex>
-                <v-flex
-                  xs12
-                  md4
-                >
-                  <v-text-field
-                    label="Email Address"
-                    class="purple-input"/>
-                </v-flex>
-                <v-flex
-                  xs12
-                  md6
-                >
-                  <v-text-field
-                    label="First Name"
-                    class="purple-input"/>
-                </v-flex>
-                <v-flex
-                  xs12
-                  md6
-                >
-                  <v-text-field
-                    label="Last Name"
-                    class="purple-input"/>
-                </v-flex>
-                <v-flex
-                  xs12
-                  md12
-                >
-                  <v-text-field
-                    label="Adress"
-                    class="purple-input"/>
-                </v-flex>
-                <v-flex
-                  xs12
-                  md4>
-                  <v-text-field
-                    label="City"
-                    class="purple-input"/>
-                </v-flex>
-                <v-flex
-                  xs12
-                  md4>
-                  <v-text-field
-                    label="Country"
-                    class="purple-input"/>
-                </v-flex>
-                <v-flex
-                  xs12
-                  md4>
-                  <v-text-field
-                    class="purple-input"
-                    label="Postal Code"
-                    type="number"/>
-                </v-flex>
-                <v-flex xs12>
-                  <v-textarea
-                    class="purple-input"
-                    label="About Me"
-                    value="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-                  />
-                </v-flex>
-                <v-flex
-                  xs12
-                  text-xs-right
-                >
-                  <v-btn
-                    class="mx-0 font-weight-light"
-                    color="success"
-                  >
-                    Update Profile
-                  </v-btn>
+                <v-flex xs12 md4>
+                  <h1>Comming soon</h1>
                 </v-flex>
               </v-layout>
             </v-container>
           </v-form>
         </material-card>
       </v-flex>
-      <v-flex
-        xs12
-        md4
-      >
+      <v-flex xs12 md4>
         <material-card class="v-card-profile">
-          <v-avatar
-            slot="offset"
-            class="mx-auto d-block"
-            size="130"
-          >
+          <v-avatar slot="offset" class="mx-auto d-block" size="130">
             <img
-              src="https://demos.creative-tim.com/vue-material-dashboard/img/marc.aba54d65.jpg"
+              src="https://avatars3.githubusercontent.com/u/30783877?s=400&u=6aa335dcafb11b3aa8dbcaab86ed3b2a1b6bea73&v=4"
             >
           </v-avatar>
           <v-card-text class="text-xs-center">
-            <h6 class="category text-gray font-weight-thin mb-3">CEO / CO-FOUNDER</h6>
-            <h4 class="card-title font-weight-light">Alec Thompson</h4>
-            <p class="card-description font-weight-light">Don't be scared of the truth because we need to restart the human foundation in truth And I love you like Kanye loves Kanye I love Rick Owens’ bed design but the back is...</p>
+            <h6 class="category text-gray font-weight-thin mb-3">CEO / FOUNDER</h6>
+            <h4 class="card-title font-weight-light">Amanda Esmeraldo</h4>
+
+            <h6 class="category text-gray font-weight-thin mb-3">Front-end developer</h6>
+            <p class="card-description font-weight-light">
+              <i>Never give up on something you can't go a day without thinking.</i>
+            </p>
             <v-btn
-              color="success"
+              color="dark"
               round
+              href="https://github.com/amendx"
+              target="_blank"
               class="font-weight-light"
             >Follow</v-btn>
           </v-card-text>
@@ -144,8 +44,9 @@
 </template>
 
 <script>
-import materialCard from '../core/Card.vue'
+import materialCard from "../core/Card.vue";
 export default {
-components: {materialCard},  //
-}
+  components: { materialCard },
+  computed: {}
+};
 </script>

@@ -1,31 +1,23 @@
 <template>
-<div>
-
-
- <v-container>
-    
-    <v-layout row wrap >
+  <v-container>
+    <v-layout row wrap>
       <v-flex xs12>
         <v-card>
           <v-card-title>
             <h6 class="primary--text">{{ currentMovie.title }}</h6>
-           
           </v-card-title>
           <v-card-media
-             :src="`https://image.tmdb.org/t/p/original${this.currentMovie.backdrop_path}`"
+            :src="`https://image.tmdb.org/t/p/original${this.currentMovie.backdrop_path}`"
             height="400px"
           ></v-card-media>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <app-movie-favorite-dialog
-              :movieId="currentMovie.id"
-              v-if="userIsAuthenticated"></app-movie-favorite-dialog>
+            <app-movie-favorite-dialog :movieId="currentMovie.id" v-if="userIsAuthenticated"></app-movie-favorite-dialog>
           </v-card-actions>
         </v-card>
       </v-flex>
     </v-layout>
   </v-container>
-</div>
 </template>
 
 <script>
@@ -33,16 +25,16 @@ import { RepositoryAbstractFactory } from "../../services/RepositoryAbstractFact
 
 const MoviesRepository = RepositoryAbstractFactory.get("movies");
 export default {
-  props: ['id'],
-  data(){
-    return{
+  props: ["id"],
+  data() {
+    return {
       currentMovie: {}
-    }
-  }, 
-   async created() {
+    };
+  },
+  async created() {
     this.fetch();
   },
-  methods:{
+  methods: {
     async fetch() {
       const { data } = await MoviesRepository.getMovie(this.$route.params.id);
       this.currentMovie = data;
@@ -51,30 +43,33 @@ export default {
       const { data } = await MoviesRepository.getImagePath(path);
     }
   },
-  computed:{
-     userIsAuthenticated() {
+  computed: {
+    userIsAuthenticated() {
       return (
         this.$store.getters.user != null &&
         this.$store.getters.user !== undefined
       );
-    } 
+    }
   }
-
-}
+};
 </script>
 
 <style scoped>
 body {
-  background-color: #E1E7E7;
+  background-color: #e1e7e7;
 }
 .card {
   position: relative;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   height: 370px;
   width: 240px;
   margin: 10px;
   overflow: hidden;
-  box-shadow: 0px 2px 4px 0px rgba(0,0,0,0.5);
+  box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.5);
+}
+
+.favorite-card {
+  transform: (0.5, 0.5);
 }
 .card-image {
   /* center horizontally overflown image */
@@ -89,7 +84,7 @@ body {
 .card-row {
   display: flex;
   justify-content: center;
-  align-items: center;  
+  align-items: center;
   min-width: 780px;
   width: 100%;
   height: 500px;
@@ -110,7 +105,7 @@ body {
 }
 .card-author {
   font-size: 14px;
-  color: #BAB096;
+  color: #bab096;
 }
 </style>
 

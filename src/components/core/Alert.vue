@@ -1,5 +1,5 @@
 <template>
-  <v-alert error dismissible @input="onClose" :value="true">{{text}}</v-alert>
+  <v-alert error dismissible transition="scale-transition" @input="onClose" :value="true">{{text}}</v-alert>
 </template>
 
 <script>
