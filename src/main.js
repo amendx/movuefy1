@@ -7,7 +7,7 @@ import * as firebase from "firebase";
 import "vue-instant/dist/vue-instant.css";
 import VueInstant from "vue-instant";
 import AlertComp from "./components/core/Alert.vue";
-import FavoriteDialog from "./components/Movies/Favorite/FavoriteDialog.vue";
+import FavoriteDialog from "./components/core/FavoriteDialog.vue";
 import Toolbar from "./components/core/Toolbar";
 import Loading from "./components/core/Loading";
 import MovieCard from "./components/core/MovieCard";

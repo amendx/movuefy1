@@ -5,7 +5,6 @@ import Movies from "@/components/Movies/Movies";
 import Favorites from "@/components/Movies/Favorites";
 import MovieCard from "@/components/core/MovieCard";
 import MovieDetails from "@/components/Movies/MovieDetails";
-import SaveFavorite from "@/components/Movies/SaveFavorite";
 import Profile from "@/components/User/Profile";
 import Signup from "@/components/User/Signup";
 import Signin from "@/components/User/Signin";
@@ -48,12 +47,6 @@ export default new Router({
       path: "/profile",
       name: "Profile",
       component: Profile,
-      beforeEnter: AuthGuard
-    },
-    {
-      path: "/saveFavorite",
-      name: "SaveFavorite",
-      component: SaveFavorite,
       beforeEnter: AuthGuard
     },
     {
