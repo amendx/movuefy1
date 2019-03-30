@@ -1,18 +1,47 @@
 
 <template>
   <div>
-    <v-flex xs12 md12 sm12 lg12>
-      <v-layout align-center justify-center>
-        <v-flex xs12 md12 lg12 offset-md3 offset-lg4>
+    <v-flex
+      xs12
+      md12
+      sm12
+      lg12
+    >
+      <v-layout
+        align-center
+        justify-center
+      >
+        <v-flex
+          xs12
+          md12
+          lg12
+          offset-md3
+          offset-lg4
+        >
           <v-spacer></v-spacer>
         </v-flex>
       </v-layout>
     </v-flex>
     <v-container>
-      <v-layout align-center justify-center row fill-height>
-        <v-flex xs12 md8 sm8 lg8 align-center justify-center>
+      <v-layout
+        align-center
+        justify-center
+        row
+        fill-height
+      >
+        <v-flex
+          xs12
+          md8
+          sm8
+          lg8
+          align-center
+          justify-center
+        >
           <v-card>
-            <v-toolbar dark color="dark">
+            <v-toolbar
+              dark
+              color="dark"
+            >
               <v-toolbar-title>Search movies</v-toolbar-title>
             </v-toolbar>
             <v-card-media>
@@ -34,13 +63,28 @@
     </v-container>
     <v-container v-if="hasMovie">
       <v-layout>
-        <v-flex xs12 sm10 md8 lg6 offset-sm1 offset-md2 offset-lg3>
-          <movie-card :currentMovie="currentMovie" :path="`${path}${currentMovie.poster_path}`"></movie-card>
+        <v-flex
+          xs12
+          sm10
+          md8
+          lg6
+          offset-sm1
+          offset-md2
+          offset-lg3
+        >
+          <movie-card
+            :currentMovie="currentMovie"
+            :path="`${path}${currentMovie.poster_path}`"
+          ></movie-card>
         </v-flex>
       </v-layout>
     </v-container>
     <v-container v-else>
-      <v-layout row wrap wrapclass="mb-2">
+      <v-layout
+        row
+        wrap
+        wrapclass="mb-2"
+      >
         <v-flex
           xs12
           sm10
@@ -52,12 +96,18 @@
           v-for="movie in movies"
           :key="movie.id"
         >
-          <movie-card :currentMovie="movie" :path="`${path}${movie.poster_path}`"></movie-card>
+          <movie-card
+            :currentMovie="movie"
+            :path="`${path}${movie.poster_path}`"
+          ></movie-card>
         </v-flex>
       </v-layout>
     </v-container>
-    <v-layout align-center justify-center>
-      <pagination :page="page"/>
+    <v-layout
+      align-center
+      justify-center
+    >
+      <pagination :page="page" />
     </v-layout>
   </div>
 </template>
@@ -69,7 +119,7 @@ import _ from "lodash";
 const MoviesRepository = RepositoryAbstractFactory.get("movies");
 import pagination from "../core/Pagination.vue";
 export default {
-  data() {
+  data () {
     return {
       name: "Movies",
       searchterm: "",
@@ -86,38 +136,38 @@ export default {
     pagination
   },
   computed: {
-    movies() {
+    movies () {
       return this.$store.getters.loadedMovies;
     },
-    page() {
+    page () {
       return this.$store.state.currentPage;
     }
   },
   watch: {
-    searchterm: function(searchterm) {
+    searchterm: function (searchterm) {
       this.suggest(searchterm);
     },
-    currentMovie(current) {
+    currentMovie (current) {
       this.currentMovie = current;
       if (this.currentMovie.id) this.hasMovie = true;
       if (!hasMovie) this.searchMovies();
     },
-    search(val) {
+    search (val) {
       console.log(val);
     }
   },
   methods: {
-    submit: function() {
+    submit: function () {
       this.search(this.searchterm);
     },
 
-    suggest: async function(searchterm) {
+    suggest: async function (searchterm) {
       var that = this;
       this.suggestions = [];
       if (searchterm.length > 0) {
         const { data } = await MoviesRepository.searchMovies(searchterm).then(
           response => {
-            response.data.results.forEach(function(a) {
+            response.data.results.forEach(function (a) {
               that.suggestions.push(a);
             });
           }
@@ -126,20 +176,20 @@ export default {
         this.searchMovies();
       }
     },
-    searchMovies() {
+    searchMovies () {
       this.$store.dispatch("loadedMovies");
       this.hasMovie = false;
     },
 
-    changed: function(cf) {
+    changed: function (cf) {
       if (this.currentMovie.id) this.hasMovie = true;
       if (!hasMovie) this.searchMovies();
     },
-    search: async function() {
+    search: async function () {
       const { data } = await MoviesRepository.getMovie(this.currentMovie.id);
     }
   },
-  created() {
+  created () {
     this.$store.dispatch("loadedMovies");
   }
 };
