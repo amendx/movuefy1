@@ -1,5 +1,5 @@
 
-# Movuefy v.01 
+# Movuefy
 
 > A simple application developed to browse movies and see what's new around. 🎃
 
@@ -31,6 +31,7 @@
 
 ### Setup
 
+
 > install all dependencies first
 
 ```shell
@@ -42,6 +43,27 @@ or
 $ yarn add
 ```
 
+### Adding Variables to your Environment
+
+Don't forget to set up the variables! It allows us to have personalized configurations, but it also makes it easy to deploy our projects without having to store sensitive values in our codebase. If any doubt, read [this](https://github.com/dwyl/learn-environment-variables/blob/master/README.md) article.
+
+A config file is placed under (`~/config/dev.env.js`) or (`~/config/prod.env.js`)  and there can be placed the values of the variables. You can find the variables names and description on the file `.env.example`:  
+
+
+```json
+{
+    VUE_APP_FIREBASE_API_KEY= < firebase project api key > 
+    VUE_APP_FIREBASE_AUTH_DOMAIN= < firebase project api auth domain >
+    VUE_APP_FIREBASE_DB_URL= < firebase project api database url >
+    VUE_APP_FIREBASE_PROJECT_ID= < firebase api project id > 
+    VUE_APP_FIREBASE_STORAGE_BUCKET= < firebase api storage bucket >
+
+    VUE_APP_MOVIEDB_API_KEY= < chave de api moviedb >
+    VUE_APP_MOVIEDB_IMAGE_URL=< url de imagens >
+}
+```
+
+
 > after that, feel free to run
 ```shell
 $ npm start
@@ -51,6 +73,8 @@ $ npm start
 ```shell
 $ yarn start
 ```
+
+
 
 ### Issues you might face
 
@@ -117,17 +141,3 @@ npm run build --report
 ```
    
     
- 
-
-### Step 3
-
-
- - 📢 Repeat after me....
-
-
-💯💯💯💯💯💯💯💯💯
-#   *YOU'RE HIRED* 
-💯💯💯💯💯💯💯💯💯 
-
----
-
