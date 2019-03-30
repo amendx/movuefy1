@@ -8,7 +8,7 @@
       block
       slot="activator"
       :style="'{ padding: 30px }'">
-      {{ userIsRegistered ? 'Favorite' : 'Unfavorite' }}</v-btn>
+      {{ userIsRegistered ? 'UnFavorite' : 'Favorite' }}</v-btn>
    
     <v-card>
       <v-container>
