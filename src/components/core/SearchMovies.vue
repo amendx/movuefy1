@@ -1,10 +1,25 @@
 <template>
   <v-container>
-    <v-layout align-center justify-center row fill-height>
-      <v-flex xs12 md8 sm8 lg8 align-center justify-center>
+    <v-layout
+      align-center
+      justify-center
+      row
+      fill-height
+    >
+      <v-flex
+        xs12
+        md8
+        sm8
+        lg8
+        align-center
+        justify-center
+      >
         <v-card>
-          <v-toolbar dark color="dark">
-            <v-toolbar-title>Search movies</v-toolbar-title>
+          <v-toolbar
+            dark
+            color="dark"
+          >
+            <v-toolbar-title>{{cardTitle}}</v-toolbar-title>
           </v-toolbar>
           <v-card-media>
             <v-autocomplete
@@ -32,19 +47,20 @@ import { RepositoryAbstractFactory } from "../../services/RepositoryAbstractFact
 const MoviesRepository = RepositoryAbstractFactory.get("movies");
 export default {
   name: "SearchMovies",
-  data() {
+  data () {
     return {
       suggestions: [],
       searchterm: "",
-      currentMovie: {}
+      currentMovie: {},
+      cardTitle: "Search movies"
     };
   },
   props: ["movies", "hasMovie"],
   watch: {
-    searchterm: function(searchterm) {
+    searchterm: function (searchterm) {
       this.suggest(searchterm);
     },
-    currentMovie(current) {
+    currentMovie (current) {
       this.currentMovie = current;
       this.$store.dispatch("searchMovie", this.currentMovie.id);
       if (this.currentMovie.id) this.hasMovie = true;
@@ -52,19 +68,19 @@ export default {
     }
   },
   methods: {
-    searchMovies() {
+    searchMovies () {
       if (this.movies) this.hasMovie = false;
     },
-    search: async function() {
+    search: async function () {
       const { data } = await MoviesRepository.getMovie(this.currentMovie.id);
     },
-    suggest: async function(searchterm) {
+    suggest: async function (searchterm) {
       var that = this;
       this.suggestions = [];
       if (searchterm.length > 0) {
         const { data } = await MoviesRepository.searchMovies(searchterm).then(
           response => {
-            response.data.results.forEach(function(a) {
+            response.data.results.forEach(function (a) {
               that.suggestions.push(a);
             });
           }

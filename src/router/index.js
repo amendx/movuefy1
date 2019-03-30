@@ -14,7 +14,7 @@ Vue.use(Router);
 
 export default new Router({
   routes: [
-    { path: "", redirectTo: "/dashboard", pathMatch: "full" },
+    { path: "*", component: Home },
     {
       path: "/dashboard",
       name: "Home",

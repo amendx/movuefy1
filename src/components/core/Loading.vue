@@ -1,6 +1,9 @@
 <template>
   <v-layout>
-    <v-flex xs12 class="text-xs-center">
+    <v-flex
+      xs12
+      class="text-xs-center"
+    >
       <v-card>
         <v-progress-circular
           indeterminate
